@@ -4,7 +4,7 @@
         xmlns:dx="http://schemas.devexpress.com/winfx/2008/xaml/core"
         xmlns:dxb="http://schemas.devexpress.com/winfx/2008/xaml/bars"
         x:Name="GWTwoHelper"
-        Title="Guild Wars 2 Buddy" Height="720" Width="1280" WindowStartupLocation="CenterScreen" WindowState="Maximized" TitleAlignment="Center">
+        Title="Guild Wars 2 Buddy" Height="720" Width="1280" WindowStartupLocation="CenterScreen" WindowState="Maximized" TitleAlignment="Center" Loaded="GWTwoHelper_Loaded">
     <Grid>
         
     </Grid>

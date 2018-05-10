@@ -71,6 +71,7 @@
     <Compile Include="Stuff\CharacterStuff\Title.cs" />
     <Compile Include="Stuff\CharacterStuff\Training.cs" />
     <Compile Include="Stuff\Colour.cs" />
+    <Compile Include="Stuff\Guild.cs" />
     <Compile Include="Stuff\ItemDetail\ArmorDetail.cs" />
     <Compile Include="Stuff\Bag.cs" />
     <Compile Include="Stuff\Character.cs" />
@@ -82,6 +83,9 @@
     <Compile Include="Stuff\ItemStuff\ItemAttribute.cs" />
     <Compile Include="Stuff\ItemStuff\ItemBuff.cs" />
     <Compile Include="Stuff\ItemStuff\ItemStat.cs" />
+    <Compile Include="Stuff\Main.cs" />
+    <Compile Include="Stuff\Mastery.cs" />
+    <Compile Include="Stuff\MiniPet.cs" />
     <Compile Include="Stuff\Skill.cs" />
     <Compile Include="Stuff\Skin.cs" />
     <Page Include="MainWindow.xaml">

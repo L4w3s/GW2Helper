@@ -4,7 +4,9 @@ using GW2Helper.Stuff.CharacterStuff.Skills;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
+using System.Net;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -44,7 +46,7 @@ namespace GW2Helper.Stuff
         public List<string> Flags { get; set; }
         public Profession CharProfession { get; set; }
         public int Level { get; set; }
-        public string Guild { get; set; }
+        public Guild GuildInfo { get; set; }
         public int Age { get; set; }
         public DateTime CreationDate { get; set; }
         public int Deaths { get; set; }
@@ -60,23 +62,46 @@ namespace GW2Helper.Stuff
         public List<Recipe> Recipes { get; set; }
         public List<Training> TrainingStats { get; set; }
 
-        public static Character GetCharacterFromJSON(string json)
+        public static Character GetCharacterFromJSON(string json, Main main)
         {
             CharacterRAW charRAW = JsonConvert.DeserializeObject<CharacterRAW>(json);
             Character newChar = new Character
             {
+                Backstory = new List<BackstoryAnswer>(),
                 Name = charRAW.name,
                 CharRace = (Race)Enum.Parse(typeof(Race), charRAW.race),
                 CharGender = (Gender)Enum.Parse(typeof(Gender), charRAW.gender),
                 Flags = charRAW.flags.ToList(),
-                Backstory = new List<BackstoryAnswer>(),
-                CharProfession = (Profession)Enum.Parse(typeof(Profession), charRAW.profession)
+                CharProfession = (Profession)Enum.Parse(typeof(Profession), charRAW.profession),
+                Level = charRAW.level,
+                Age = charRAW.age,
+                CreationDate = DateTime.Parse(charRAW.created),
+                Deaths = charRAW.deaths
             };
 
             for (int i = 0; i < charRAW.backstory.Length; i++)
             {
                 string id = charRAW.backstory[i];
-                newChar.Backstory.Add(BackstoryAnswer.FromID(id));
+                BackstoryAnswer answer = main.BackstoryAnswers.FirstOrDefault(ans => ans.ID == id);
+                newChar.Backstory.Add(answer);
+            }
+            if (!string.IsNullOrEmpty(charRAW.guild))
+            {
+                WebRequest request = WebRequest.Create("https://api.guildwars2.com/v2/guild/" + charRAW.guild);
+                WebResponse response = request.GetResponse();
+                Stream data = response.GetResponseStream();
+
+                string html = string.Empty;
+                using (StreamReader sr = new StreamReader(data))
+                {
+                    html = sr.ReadToEnd();
+                }
+                newChar.GuildInfo = Guild.GetGuildFromJSON(html);
+            }
+            if (charRAW.title.HasValue) {
+                int titleID = charRAW.title.Value;
+                Title title = main.Titles.FirstOrDefault(ti => ti.ID == titleID);
+                newChar.CharTitle = title;
             }
 
             return newChar;

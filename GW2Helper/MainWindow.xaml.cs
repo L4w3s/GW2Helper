@@ -4,6 +4,8 @@ using System.IO;
 using System.Linq;
 using System.Net;
 using System.Text;
+using System.Threading;
+using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Data;
@@ -42,19 +44,18 @@ namespace GW2Helper
         //
         //COMPLETE SKILL!
 
-        string selectedCharacter = string.Empty;
+        Character character = new Character();
+        Action _cancelWork;
+        Main Global = new Main();
 
         public MainWindow()
         {
             InitializeComponent();
-            selectedCharacter = "Sunbucks";
-
-            Character myChar = ObtainCharacterInformation("https://api.guildwars2.com/v2/characters/" + selectedCharacter + "?access_token=0A5E1557-B486-0D42-B70B-05B45DA2A43C431C5179-393D-4A88-8633-3E42EC6A3EB2");
         }
 
-        public Character ObtainCharacterInformation(string URL)
+        public Character GetCharacter(string selectedCharacter)
         {
-            WebRequest request = WebRequest.Create(URL);
+            WebRequest request = WebRequest.Create("https://api.guildwars2.com/v2/characters/" + selectedCharacter + "?access_token=0A5E1557-B486-0D42-B70B-05B45DA2A43C431C5179-393D-4A88-8633-3E42EC6A3EB2");
             WebResponse response = request.GetResponse();
             Stream data = response.GetResponseStream();
 
@@ -64,7 +65,197 @@ namespace GW2Helper
                 html = sr.ReadToEnd();
             }
 
-            return Character.GetCharacterFromJSON(html);
+            return Character.GetCharacterFromJSON(html, Global);
+        }
+
+        private async void GWTwoHelper_Loaded(object sender, RoutedEventArgs e)
+        {
+            var cancellationTokenSource = new CancellationTokenSource();
+            this._cancelWork = () => { cancellationTokenSource.Cancel(); };
+            var token = cancellationTokenSource.Token;
+
+            await Task.Run(() => task_PopulateMasteries(), token);
+            await Task.Run(() => task_PopulateBackstories(), token);
+            await Task.Run(() => task_PopulateTitles(), token);
+            await Task.Run(() => task_PopulateMinipets(), token);
+            await Task.Run(() => task_PopulateColours(), token);
+            await Task.Run(() => task_PopulateRecipes(), token);
+            character = GetCharacter("Sunbucks");
+        }
+
+        public void task_PopulateRecipes()
+        {
+            WebRequest request = WebRequest.Create("https://api.guildwars2.com/v2/recipes");
+            WebResponse response = request.GetResponse();
+            Stream data = response.GetResponseStream();
+
+            string html = string.Empty;
+            using (StreamReader sr = new StreamReader(data))
+            {
+                html = sr.ReadToEnd();
+            }
+
+            List<int> recipeIDs = JsonConvert.DeserializeObject<List<int>>(html);
+
+            for (int i = 0; i < recipeIDs.Count; i++)
+            {
+                request = WebRequest.Create("https://api.guildwars2.com/v2/recipes/" + recipeIDs[i]);
+                response = request.GetResponse();
+                data = response.GetResponseStream();
+
+                html = null;
+                using (StreamReader sr = new StreamReader(data))
+                {
+                    html = sr.ReadToEnd();
+                }
+
+                Global.Recipes.Add(Recipe.GetRecipeFromJSON(html));
+            }
+        }
+        public void task_PopulateBackstories()
+        {
+            WebRequest request = WebRequest.Create("https://api.guildwars2.com/v2/backstory/questions");
+            WebResponse response = request.GetResponse();
+            Stream data = response.GetResponseStream();
+
+            string html = string.Empty;
+            using (StreamReader sr = new StreamReader(data))
+            {
+                html = sr.ReadToEnd();
+            }
+
+            List<int> backstoryIDs = JsonConvert.DeserializeObject<List<int>>(html);
+
+            for (int i = 0; i < backstoryIDs.Count; i++)
+            {
+                request = WebRequest.Create("https://api.guildwars2.com/v2/backstory/questions/" + backstoryIDs[i]);
+                response = request.GetResponse();
+                data = response.GetResponseStream();
+
+                html = null;
+                using (StreamReader sr = new StreamReader(data))
+                {
+                    html = sr.ReadToEnd();
+                }
+
+                Global.BackstoryQuestions.Add(BackstoryQuestion.GetBackstoryFromJSON(html, Global));
+            }
+        }
+        public void task_PopulateMasteries()
+        {
+            WebRequest request = WebRequest.Create("https://api.guildwars2.com/v2/masteries");
+            WebResponse response = request.GetResponse();
+            Stream data = response.GetResponseStream();
+
+            string html = string.Empty;
+            using (StreamReader sr = new StreamReader(data))
+            {
+                html = sr.ReadToEnd();
+            }
+
+            List<int> masteryIDs = JsonConvert.DeserializeObject<List<int>>(html);
+
+            for (int i = 0; i < masteryIDs.Count; i++)
+            {
+                request = WebRequest.Create("https://api.guildwars2.com/v2/masteries/" + masteryIDs[i]);
+                response = request.GetResponse();
+                data = response.GetResponseStream();
+
+                html = null;
+                using (StreamReader sr = new StreamReader(data))
+                {
+                    html = sr.ReadToEnd();
+                }
+
+                Global.Masteries.Add(Mastery.GetMasteryFromJSON(html));
+            }
+        }
+        public void task_PopulateMinipets()
+        {
+            WebRequest request = WebRequest.Create("https://api.guildwars2.com/v2/minis");
+            WebResponse response = request.GetResponse();
+            Stream data = response.GetResponseStream();
+
+            string html = string.Empty;
+            using (StreamReader sr = new StreamReader(data))
+            {
+                html = sr.ReadToEnd();
+            }
+
+            List<int> miniIDs = JsonConvert.DeserializeObject<List<int>>(html);
+
+            for (int i = 0; i < miniIDs.Count; i++)
+            {
+                request = WebRequest.Create("https://api.guildwars2.com/v2/minis/" + miniIDs[i]);
+                response = request.GetResponse();
+                data = response.GetResponseStream();
+
+                html = null;
+                using (StreamReader sr = new StreamReader(data))
+                {
+                    html = sr.ReadToEnd();
+                }
+
+                Global.Minis.Add(MiniPet.GetMiniPetFromJSON(html, Global));
+            }
+        }
+        public void task_PopulateColours()
+        {
+            WebRequest request = WebRequest.Create("https://api.guildwars2.com/v2/colors");
+            WebResponse response = request.GetResponse();
+            Stream data = response.GetResponseStream();
+
+            string html = string.Empty;
+            using (StreamReader sr = new StreamReader(data))
+            {
+                html = sr.ReadToEnd();
+            }
+
+            List<int> colourIDs = JsonConvert.DeserializeObject<List<int>>(html);
+
+            for (int i = 0; i < colourIDs.Count; i++)
+            {
+                request = WebRequest.Create("https://api.guildwars2.com/v2/colors/" + colourIDs[i]);
+                response = request.GetResponse();
+                data = response.GetResponseStream();
+
+                html = null;
+                using (StreamReader sr = new StreamReader(data))
+                {
+                    html = sr.ReadToEnd();
+                }
+
+                Global.Colours.Add(Colour.GetColourFromJSON(html));
+            }
+        }
+        public void task_PopulateTitles()
+        {
+            WebRequest request = WebRequest.Create("https://api.guildwars2.com/v2/titles");
+            WebResponse response = request.GetResponse();
+            Stream data = response.GetResponseStream();
+
+            string html = string.Empty;
+            using (StreamReader sr = new StreamReader(data))
+            {
+                html = sr.ReadToEnd();
+            }
+
+            List<int> titleIDs = JsonConvert.DeserializeObject<List<int>>(html);
+
+            for (int i = 0; i < titleIDs.Count; i++)
+            {
+                request = WebRequest.Create("https://api.guildwars2.com/v2/titles/" + titleIDs[i]);
+                response = request.GetResponse();
+                data = response.GetResponseStream();
+
+                html = null;
+                using (StreamReader sr = new StreamReader(data))
+                {
+                    html = sr.ReadToEnd();
+                }
+
+                Global.Titles.Add(Stuff.CharacterStuff.Title.GetTitleFromJSON(html, Global));
+            }
         }
     }
 }
