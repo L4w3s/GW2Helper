@@ -8,7 +8,7 @@ namespace GW2Helper.Stuff
 {
     public class BackstoryAnswer
     {
-        public int ID { get; set; }
+        public string ID { get; set; }
         public string Answer { get; set; }
         public string Description { get; set; }
         public string Journal { get; set; }

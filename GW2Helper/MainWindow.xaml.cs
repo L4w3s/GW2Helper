@@ -15,6 +15,7 @@ using System.Windows.Navigation;
 using System.Windows.Shapes;
 using DevExpress.Xpf.Core;
 using GW2Helper.Stuff;
+using Newtonsoft.Json;
 
 namespace GW2Helper
 {
@@ -41,9 +42,14 @@ namespace GW2Helper
         //
         //COMPLETE SKILL!
 
+        string selectedCharacter = string.Empty;
+
         public MainWindow()
         {
             InitializeComponent();
+            selectedCharacter = "Sunbucks";
+
+            Character myChar = ObtainCharacterInformation("https://api.guildwars2.com/v2/characters/" + selectedCharacter + "?access_token=0A5E1557-B486-0D42-B70B-05B45DA2A43C431C5179-393D-4A88-8633-3E42EC6A3EB2");
         }
 
         public Character ObtainCharacterInformation(string URL)
@@ -58,7 +64,7 @@ namespace GW2Helper
                 html = sr.ReadToEnd();
             }
 
-            return Newtonsoft.Json.JsonConvert.DeserializeObject<Character>(html);
+            return Character.GetCharacterFromJSON(html);
         }
     }
 }
