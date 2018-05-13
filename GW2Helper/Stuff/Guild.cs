@@ -22,7 +22,7 @@ namespace GW2Helper.Stuff
         public string Tag { get; set; }
         public GuildEmblem GuildEmblemObject { get; set; }
 
-        public static Guild GetGuildFromJSON(string json)
+        public static Guild GetGuildFromJSON(string json, Main main)
         {
             GuildRAW guildRAW = JsonConvert.DeserializeObject<GuildRAW>(json);
             Guild newGuild = new Guild
@@ -91,6 +91,7 @@ namespace GW2Helper.Stuff
 
             newGuild.GuildEmblemObject = newGuildEmblem;
 
+            main.OnCharStatusUpdate("Generated Guild " + newGuild.ID);
             return newGuild;
         }
     }
@@ -128,10 +129,11 @@ namespace GW2Helper.Stuff
                 using (WebClient client = new WebClient())
                 {
                     fileName = emblemRAW.layers[i].Substring(emblemRAW.layers[i].LastIndexOf("/") + 1);
-                    if (!File.Exists(AppDomain.CurrentDomain.BaseDirectory + @"\images\emblems\" + ((foreground) ? @"foreground\" : @"background\") + fileName)) client.DownloadFileAsync(new Uri(emblemRAW.layers[i]), AppDomain.CurrentDomain.BaseDirectory + @"\images\emblems\" + ((foreground) ? @"foreground\" : @"background\") + fileName);
+                    Directory.CreateDirectory(AppDomain.CurrentDomain.BaseDirectory + @"images\emblems\" + ((foreground) ? @"foreground\" : @"background\"));
+                    if (!File.Exists(AppDomain.CurrentDomain.BaseDirectory + @"images\emblems\" + ((foreground) ? @"foreground\" : @"background\") + fileName)) client.DownloadFileAsync(new Uri(emblemRAW.layers[i]), AppDomain.CurrentDomain.BaseDirectory + @"images\emblems\" + ((foreground) ? @"foreground\" : @"background\") + fileName);
                 }
 
-                newEmblem.Images.Add(AppDomain.CurrentDomain.BaseDirectory + @"\images\emblems\" + ((foreground) ? @"foreground\" : @"background\") + fileName);
+                newEmblem.Images.Add(AppDomain.CurrentDomain.BaseDirectory + @"images\emblems\" + ((foreground) ? @"foreground\" : @"background\") + fileName);
             }
 
             return newEmblem;

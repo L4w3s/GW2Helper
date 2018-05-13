@@ -25,7 +25,7 @@ namespace GW2Helper.Stuff
         public Region MasteryRegion { get; set; }
         public List<MasteryLevel> Levels { get; set; }
 
-        public static Mastery GetMasteryFromJSON(string json)
+        public static Mastery GetMasteryFromJSON(string json, Main main)
         {
             MasteryRAW masteryRAW = JsonConvert.DeserializeObject<MasteryRAW>(json);
             Mastery newMastery = new Mastery
@@ -34,15 +34,17 @@ namespace GW2Helper.Stuff
                 Name = masteryRAW.name,
                 Requirement = masteryRAW.requirement,
                 Order = masteryRAW.order.Value,
-                MasteryRegion = (Region)Enum.Parse(typeof(Region), masteryRAW.region)
+                MasteryRegion = (Region)Enum.Parse(typeof(Region), masteryRAW.region),
+                Levels = new List<MasteryLevel>()
             };
             string fileName = string.Empty;
             using (WebClient client = new WebClient())
             {
                 fileName = masteryRAW.background.Substring(masteryRAW.background.LastIndexOf("/") + 1);
-                if (!File.Exists(AppDomain.CurrentDomain.BaseDirectory + @"\images\masteries\" + fileName)) client.DownloadFileAsync(new Uri(masteryRAW.background), AppDomain.CurrentDomain.BaseDirectory + @"\images\masteries\" + fileName);
+                Directory.CreateDirectory(AppDomain.CurrentDomain.BaseDirectory + @"images\masteries\");
+                if (!File.Exists(AppDomain.CurrentDomain.BaseDirectory + @"images\masteries\" + fileName)) client.DownloadFileAsync(new Uri(masteryRAW.background), AppDomain.CurrentDomain.BaseDirectory + @"images\masteries\" + fileName);
             }
-            newMastery.MasteryBackground = AppDomain.CurrentDomain.BaseDirectory + @"\images\masteries\" + fileName;
+            newMastery.MasteryBackground = AppDomain.CurrentDomain.BaseDirectory + @"images\masteries\" + fileName;
 
             for (int i = 0; i < masteryRAW.levels.Length; i++)
             {
@@ -59,13 +61,15 @@ namespace GW2Helper.Stuff
                 using (WebClient client = new WebClient())
                 {
                     fileName = masteryLevelRAW.icon.Substring(masteryLevelRAW.icon.LastIndexOf("/") + 1);
-                    if (!File.Exists(AppDomain.CurrentDomain.BaseDirectory + @"\images\masteries\levels\" + fileName)) client.DownloadFileAsync(new Uri(masteryLevelRAW.icon), AppDomain.CurrentDomain.BaseDirectory + @"\images\masteries\levels\" + fileName);
+                    Directory.CreateDirectory(AppDomain.CurrentDomain.BaseDirectory + @"images\masteries\levels\");
+                    if (!File.Exists(AppDomain.CurrentDomain.BaseDirectory + @"images\masteries\levels\" + fileName)) client.DownloadFileAsync(new Uri(masteryLevelRAW.icon), AppDomain.CurrentDomain.BaseDirectory + @"images\masteries\levels\" + fileName);
                 }
-                newMasteryLevel.LevelBackground = AppDomain.CurrentDomain.BaseDirectory + @"\images\masteries\levels\" + fileName;
+                newMasteryLevel.LevelBackground = AppDomain.CurrentDomain.BaseDirectory + @"images\masteries\levels\" + fileName;
 
                 newMastery.Levels.Add(newMasteryLevel);
             }
 
+            main.OnCharStatusUpdate("Generated Mastery " + newMastery.ID);
             return newMastery;
         }
     }

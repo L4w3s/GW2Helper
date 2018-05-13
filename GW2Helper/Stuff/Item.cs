@@ -20,5 +20,11 @@ namespace GW2Helper.Stuff
         public List<string> GameTypes { get; set; }
         public List<string> Restrictions { get; set; }
         public ItemDetail.ItemDetail Details { get; set; }
+
+        public static Item GetItemFromJSON(string json, Main main)
+        {
+            Item newItem = new Item { };
+            return newItem;
+        }
     }
 }

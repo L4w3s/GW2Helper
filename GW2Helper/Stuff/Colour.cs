@@ -18,7 +18,7 @@ namespace GW2Helper.Stuff
         public Item DyeItem { get; set; }
         public ColourCategory Categories { get; set; }
 
-        public static Colour GetColourFromJSON(string json)
+        public static Colour GetColourFromJSON(string json, Main main)
         {
             ColourRAW colourRAW = JsonConvert.DeserializeObject<ColourRAW>(json);
             Colour newColour = new Colour
@@ -70,6 +70,7 @@ namespace GW2Helper.Stuff
                 CatRarity = (ColourCategory.Rarity)Enum.Parse(typeof(ColourCategory.Rarity), colourRAW.categories[2])
             };
 
+            main.OnCharStatusUpdate("Generated Colour " + newColour.ID);
             return newColour;
         }
     }

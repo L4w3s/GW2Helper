@@ -63,16 +63,18 @@ namespace GW2Helper.Stuff.CharacterStuff
                 Rewards = new List<Reward>(),
                 Bits = new List<Bit>()
             };
+            string fileName = string.Empty;
 
             if (!string.IsNullOrEmpty(achievementRAW.icon))
             {
-                string fileName = string.Empty;
+                fileName = string.Empty;
                 using (WebClient client = new WebClient())
                 {
                     fileName = achievementRAW.icon.Substring(achievementRAW.icon.LastIndexOf("/") + 1);
-                    if (!File.Exists(AppDomain.CurrentDomain.BaseDirectory + @"\images\achievements\" + fileName)) client.DownloadFileAsync(new Uri(achievementRAW.icon), AppDomain.CurrentDomain.BaseDirectory + @"\images\achievements\" + fileName);
+                    Directory.CreateDirectory(AppDomain.CurrentDomain.BaseDirectory + @"images\achievements\");
+                    if (!File.Exists(AppDomain.CurrentDomain.BaseDirectory + @"images\achievements\" + fileName)) client.DownloadFileAsync(new Uri(achievementRAW.icon), AppDomain.CurrentDomain.BaseDirectory + @"\images\achievements\" + fileName);
                 }
-                newAchievement.Image = AppDomain.CurrentDomain.BaseDirectory + @"\images\achievements\" + fileName;
+                newAchievement.Image = AppDomain.CurrentDomain.BaseDirectory + @"images\achievements\" + fileName;
             }
             for (int i = 0; i < achievementRAW.flags.Length; i++)
             {
@@ -225,13 +227,14 @@ namespace GW2Helper.Stuff.CharacterStuff
                     newBit.BitSkin = skin;
                 }
             }
-            string fileName = string.Empty;
+            fileName = string.Empty;
             using (WebClient client = new WebClient())
             {
                 fileName = achievementRAW.icon.Substring(achievementRAW.icon.LastIndexOf("/") + 1);
-                if (!File.Exists(AppDomain.CurrentDomain.BaseDirectory + @"\images\achievements\" + fileName)) client.DownloadFileAsync(new Uri(achievementRAW.icon), AppDomain.CurrentDomain.BaseDirectory + @"\images\achievements\" + fileName);
+                Directory.CreateDirectory(AppDomain.CurrentDomain.BaseDirectory + @"images\achievements\");
+                if (!File.Exists(AppDomain.CurrentDomain.BaseDirectory + @"images\achievements\" + fileName)) client.DownloadFileAsync(new Uri(achievementRAW.icon), AppDomain.CurrentDomain.BaseDirectory + @"images\achievements\" + fileName);
             }
-            newAchievement.Image = AppDomain.CurrentDomain.BaseDirectory + @"\images\achievements\" + fileName;
+            newAchievement.Image = AppDomain.CurrentDomain.BaseDirectory + @"images\achievements\" + fileName;
 
             main.Achievements.Add(newAchievement);
 

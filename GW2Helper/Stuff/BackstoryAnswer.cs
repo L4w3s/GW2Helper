@@ -17,7 +17,7 @@ namespace GW2Helper.Stuff
         public List<Character.Profession> Professions { get; set; }
         public List<Character.Race> Races { get; set; }
 
-        public static BackstoryAnswer GetAnswerFromJSON(string json)
+        public static BackstoryAnswer GetAnswerFromJSON(string json, Main main)
         {
             BackstoryAnswerRAW bsRAW = JsonConvert.DeserializeObject<BackstoryAnswerRAW>(json);
             BackstoryAnswer newBS = new BackstoryAnswer
@@ -30,15 +30,23 @@ namespace GW2Helper.Stuff
                 Professions = new List<Character.Profession>()
             };
 
-            for (int i = 0; i < bsRAW.races.Length; i++)
+            if (bsRAW.races != null)
             {
-                newBS.Races.Add((Character.Race)Enum.Parse(typeof(Character.Race), bsRAW.races[i]));
+                for (int i = 0; i < bsRAW.races.Length; i++)
+                {
+                    newBS.Races.Add((Character.Race)Enum.Parse(typeof(Character.Race), bsRAW.races[i]));
+                }
             }
-            for (int i = 0; i < bsRAW.professions.Length; i++)
+            if (bsRAW.professions != null)
             {
-                newBS.Professions.Add((Character.Profession)Enum.Parse(typeof(Character.Profession), bsRAW.professions[i]));
+                for (int i = 0; i < bsRAW.professions.Length; i++)
+                {
+                    newBS.Professions.Add((Character.Profession)Enum.Parse(typeof(Character.Profession), bsRAW.professions[i]));
+                }
             }
-            
+
+            main.BackstoryAnswers.Add(newBS);
+            main.OnCharStatusUpdate("Generated Backstory Answer " + newBS.ID);
             return newBS;
         }
     }

@@ -9,6 +9,8 @@ namespace GW2Helper.Stuff
 {
     public class Main
     {
+        public event EventHandler<string> CharStatusUpdate;
+
         public List<BackstoryAnswer> BackstoryAnswers = new List<BackstoryAnswer>();
         public List<BackstoryQuestion> BackstoryQuestions = new List<BackstoryQuestion>();
         public List<Item> Items = new List<Item>();
@@ -19,5 +21,10 @@ namespace GW2Helper.Stuff
         public List<MiniPet> Minis = new List<MiniPet>();
         public List<Skin> Skins = new List<Skin>();
         public List<Colour> Colours = new List<Colour>();
+
+        public virtual void OnCharStatusUpdate(string e)
+        {
+            CharStatusUpdate?.Invoke(this, e);
+        }
     }
 }

@@ -48,9 +48,10 @@ namespace GW2Helper.Stuff
             using (WebClient client = new WebClient())
             {
                 fileName = miniPetRAW.icon.Substring(miniPetRAW.icon.LastIndexOf("/") + 1);
-                if (!File.Exists(AppDomain.CurrentDomain.BaseDirectory + @"\images\minipets\" + fileName)) client.DownloadFileAsync(new Uri(miniPetRAW.icon), AppDomain.CurrentDomain.BaseDirectory + @"\images\minipets\" + fileName);
+                Directory.CreateDirectory(AppDomain.CurrentDomain.BaseDirectory + @"images\minipets\");
+                if (!File.Exists(AppDomain.CurrentDomain.BaseDirectory + @"images\minipets\" + fileName)) client.DownloadFileAsync(new Uri(miniPetRAW.icon), AppDomain.CurrentDomain.BaseDirectory + @"images\minipets\" + fileName);
             }
-            newMiniPet.Image = AppDomain.CurrentDomain.BaseDirectory + @"\images\minipets\" + fileName;
+            newMiniPet.Image = AppDomain.CurrentDomain.BaseDirectory + @"images\minipets\" + fileName;
 
             return newMiniPet;
         }

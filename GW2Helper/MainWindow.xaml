@@ -6,6 +6,95 @@
         x:Name="GWTwoHelper"
         Title="Guild Wars 2 Buddy" Height="720" Width="1280" WindowStartupLocation="CenterScreen" WindowState="Maximized" TitleAlignment="Center" Loaded="GWTwoHelper_Loaded">
     <Grid>
-        
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition/>
+            <ColumnDefinition/>
+            <ColumnDefinition/>
+            <ColumnDefinition/>
+            <ColumnDefinition/>
+            <ColumnDefinition/>
+            <ColumnDefinition/>
+            <ColumnDefinition/>
+        </Grid.ColumnDefinitions>
+        <Grid.RowDefinitions>
+            <RowDefinition/>
+            <RowDefinition/>
+            <RowDefinition/>
+            <RowDefinition/>
+            <RowDefinition/>
+            <RowDefinition/>
+            <RowDefinition/>
+            <RowDefinition/>
+        </Grid.RowDefinitions>
+        <Grid Grid.RowSpan="5" Grid.ColumnSpan="2">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition/>
+                <ColumnDefinition/>
+                <ColumnDefinition/>
+                <ColumnDefinition/>
+                <ColumnDefinition/>
+                <ColumnDefinition/>
+                <ColumnDefinition/>
+                <ColumnDefinition/>
+            </Grid.ColumnDefinitions>
+            <Grid.RowDefinitions>
+                <RowDefinition/>
+                <RowDefinition/>
+                <RowDefinition/>
+                <RowDefinition/>
+                <RowDefinition/>
+                <RowDefinition/>
+                <RowDefinition/>
+                <RowDefinition/>
+                <RowDefinition/>
+                <RowDefinition/>
+                <RowDefinition/>
+                <RowDefinition/>
+                <RowDefinition/>
+                <RowDefinition/>
+                <RowDefinition/>
+                <RowDefinition/>
+                <RowDefinition/>
+                <RowDefinition/>
+                <RowDefinition/>
+                <RowDefinition/>
+                <RowDefinition/>
+                <RowDefinition/>
+                <RowDefinition/>
+                <RowDefinition/>
+                <RowDefinition/>
+                <RowDefinition/>
+                <RowDefinition/>
+                <RowDefinition/>
+                <RowDefinition/>
+                <RowDefinition/>
+                <RowDefinition/>
+                <RowDefinition/>
+            </Grid.RowDefinitions>
+            <Rectangle Grid.RowSpan="32" Grid.ColumnSpan="8">
+                <Rectangle.Fill>
+                    <ImageBrush ImageSource="pack://application:,,,/GW2Helper;component/Resources/parchment.png"/>
+                </Rectangle.Fill>
+            </Rectangle>
+            <Label x:Name="journal_name" VerticalAlignment="Stretch" HorizontalAlignment="Stretch" VerticalContentAlignment="Center" HorizontalContentAlignment="Center" Grid.Row="2" Grid.RowSpan="4" Grid.Column="1" Grid.ColumnSpan="6" FontSize="36" Foreground="Black" FontFamily="Pristina"/>
+            <TextBlock x:Name="journal_entry" TextAlignment="Center" HorizontalAlignment="Stretch" VerticalAlignment="Top" TextWrapping="Wrap" Grid.Row="6" Grid.RowSpan="24" Grid.Column="1" Grid.ColumnSpan="6" FontSize="20" Foreground="Black" FontFamily="Pristina"/>
+        </Grid> <!-- Journal -->
+        <Grid Grid.Column="5" Grid.ColumnSpan="3" Grid.RowSpan="1">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition/>
+                <ColumnDefinition/>
+                <ColumnDefinition/>
+            </Grid.ColumnDefinitions>
+            <Grid.RowDefinitions>
+                <RowDefinition/>
+                <RowDefinition/>
+            </Grid.RowDefinitions>
+            <Button x:Name="btn_loadchar" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Grid.Column="2" Click="btn_loadchar_Click">
+                <TextBlock Text="Load Characters" HorizontalAlignment="Stretch" VerticalAlignment="Center" FontSize="18" TextWrapping="Wrap" TextAlignment="Center"/>
+            </Button>
+            <TextBox x:Name="txt_api" TextWrapping="Wrap" Grid.ColumnSpan="2" VerticalAlignment="Stretch" HorizontalAlignment="Stretch" VerticalContentAlignment="Center" HorizontalContentAlignment="Center" FontSize="18"/>
+            <Label x:Name="lbl_charloaddetails" Grid.Row="1" Grid.ColumnSpan="3" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" FontSize="18"/>
+        </Grid>
+        <ListBox x:Name="lst_characters" Grid.Row="1" Grid.Column="6" Grid.ColumnSpan="2" Grid.RowSpan="7" FontSize="22" DisplayMemberPath="CharacterName" SelectedValuePath="APIToken" VerticalAlignment="Stretch" HorizontalAlignment="Stretch" VerticalContentAlignment="Center" HorizontalContentAlignment="Center" MouseDoubleClick="lst_characters_MouseDoubleClick"/>
     </Grid>
 </dx:ThemedWindow>

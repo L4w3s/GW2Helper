@@ -31,17 +31,23 @@ namespace GW2Helper.Stuff
                 Professions = new List<Character.Profession>()
             };
 
-            for (int i = 0; i < bsRAW.races.Length; i++)
+            if (bsRAW.races != null)
             {
-                newBS.Races.Add((Character.Race)Enum.Parse(typeof(Character.Race), bsRAW.races[i]));
+                for (int i = 0; i < bsRAW.races.Length; i++)
+                {
+                    newBS.Races.Add((Character.Race)Enum.Parse(typeof(Character.Race), bsRAW.races[i]));
+                }
             }
-            for (int i = 0; i < bsRAW.professions.Length; i++)
+            if (bsRAW.professions != null)
             {
-                newBS.Professions.Add((Character.Profession)Enum.Parse(typeof(Character.Profession), bsRAW.professions[i]));
+                for (int i = 0; i < bsRAW.professions.Length; i++)
+                {
+                    newBS.Professions.Add((Character.Profession)Enum.Parse(typeof(Character.Profession), bsRAW.professions[i]));
+                }
             }
             for (int i = 0; i < bsRAW.answers.Length; i++)
             {
-                WebRequest request = WebRequest.Create("https://api.guildwars2.com/v2/backstory/questions");
+                WebRequest request = WebRequest.Create("https://api.guildwars2.com/v2/backstory/answers/" + bsRAW.answers[i]);
                 WebResponse response = request.GetResponse();
                 Stream data = response.GetResponseStream();
 
@@ -50,7 +56,7 @@ namespace GW2Helper.Stuff
                 {
                     html = sr.ReadToEnd();
                 }
-                BackstoryAnswer newBSAns = BackstoryAnswer.GetAnswerFromJSON(html);
+                BackstoryAnswer newBSAns = BackstoryAnswer.GetAnswerFromJSON(html, main);
 
                 newBS.Answers.Add(newBSAns);
             }
@@ -60,6 +66,7 @@ namespace GW2Helper.Stuff
                 newBS.Answers[i].Question = newBS;
             }
 
+            main.OnCharStatusUpdate("Generated Backstory Question " + newBS.ID);
             return newBS;
         }
     }

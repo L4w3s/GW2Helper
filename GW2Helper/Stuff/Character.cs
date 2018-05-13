@@ -96,14 +96,15 @@ namespace GW2Helper.Stuff
                 {
                     html = sr.ReadToEnd();
                 }
-                newChar.GuildInfo = Guild.GetGuildFromJSON(html);
+                newChar.GuildInfo = Guild.GetGuildFromJSON(html, main);
             }
-            if (charRAW.title.HasValue) {
-                int titleID = charRAW.title.Value;
-                Title title = main.Titles.FirstOrDefault(ti => ti.ID == titleID);
-                newChar.CharTitle = title;
-            }
+            //if (charRAW.title.HasValue) {
+            //    int titleID = charRAW.title.Value;
+            //    Title title = main.Titles.FirstOrDefault(ti => ti.ID == titleID);
+            //    newChar.CharTitle = title;
+            //}
 
+            main.OnCharStatusUpdate("Generated Character " + newChar.Name);
             return newChar;
         }
     }
@@ -156,19 +157,19 @@ namespace GW2Helper.Stuff
     class SpecializationSubRAW
     {
         public int id { get; set; }
-        public int[] traits { get; set; }
+        public int?[] traits { get; set; }
     }
     class SkillRAW
     {
-        public SkillSubRAW[] pve { get; set; }
-        public SkillSubRAW[] pvp { get; set; }
-        public SkillSubRAW[] wvw { get; set; }
+        public SkillSubRAW pve { get; set; }
+        public SkillSubRAW pvp { get; set; }
+        public SkillSubRAW wvw { get; set; }
     }
     class SkillSubRAW
     {
         public int heal { get; set; }
-        public int[] utilities { get; set; }
-        public int elite { get; set; }
+        public int?[] utilities { get; set; }
+        public int? elite { get; set; }
         public string[] legends { get; set; }
     }
     class EquipmentRAW

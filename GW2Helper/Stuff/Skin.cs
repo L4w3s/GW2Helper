@@ -277,6 +277,7 @@ namespace GW2Helper.Stuff
             }
             newSkin.Image = AppDomain.CurrentDomain.BaseDirectory + @"\images\skins\" + fileName;
 
+            main.OnCharStatusUpdate("Generated Skin " + newSkin.ID);
             return newSkin;
         }
     }
