@@ -85,6 +85,8 @@ namespace GW2Helper.Stuff
                 BackstoryAnswer answer = main.BackstoryAnswers.FirstOrDefault(ans => ans.ID == id);
                 newChar.Backstory.Add(answer);
             }
+            newChar.Backstory = newChar.Backstory.OrderBy(bs => bs.Question.OrderPosition).ToList();
+
             if (!string.IsNullOrEmpty(charRAW.guild))
             {
                 WebRequest request = WebRequest.Create("https://api.guildwars2.com/v2/guild/" + charRAW.guild);
