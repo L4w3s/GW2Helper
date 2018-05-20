@@ -14,60 +14,60 @@ namespace GW2Helper.Stuff
         public int ID { get; set; }
         public string Question { get; set; }
         public List<BackstoryAnswer> Answers { get; set; }
+        public List<string> AnswerID { get; set; }
         public int OrderPosition { get; set; }
         public List<Character.Race> Races { get; set; }
         public List<Character.Profession> Professions { get; set; }
-
-        public static BackstoryQuestion GetBackstoryFromJSON(string json, Main main)
+        
+        public static void GetQuestionsFromJSON(string json, Main main)
         {
-            BackstoryQuestionRAW bsRAW = JsonConvert.DeserializeObject<BackstoryQuestionRAW>(json);
-            BackstoryQuestion newBS = new BackstoryQuestion
+            BackstoryQuestionRAW[] rawQuestions = new BackstoryQuestionRAW[1];
+            try
             {
-                ID = bsRAW.id,
-                Question = bsRAW.title,
-                OrderPosition = bsRAW.order,
-                Answers = new List<BackstoryAnswer>(),
-                Races = new List<Character.Race>(),
-                Professions = new List<Character.Profession>()
-            };
-
-            if (bsRAW.races != null)
+                rawQuestions = JsonConvert.DeserializeObject<BackstoryQuestionRAW[]>(json);
+            }
+            catch (Exception e)
             {
-                for (int i = 0; i < bsRAW.races.Length; i++)
+                rawQuestions[0] = JsonConvert.DeserializeObject<BackstoryQuestionRAW>(json);
+            }
+            for (int b = 0; b < rawQuestions.Length; b++)
+            {
+                double cur = b, max = rawQuestions.Length;
+                BackstoryQuestionRAW bsRAW = rawQuestions[b];
+                main.JSON.Add(new KeyValuePair<string, string>("BackstoryQuestion", JsonConvert.SerializeObject(bsRAW)));
+                BackstoryQuestion newBS = new BackstoryQuestion
                 {
-                    newBS.Races.Add((Character.Race)Enum.Parse(typeof(Character.Race), bsRAW.races[i]));
-                }
-            }
-            if (bsRAW.professions != null)
-            {
-                for (int i = 0; i < bsRAW.professions.Length; i++)
+                    ID = bsRAW.id,
+                    Question = bsRAW.title,
+                    OrderPosition = bsRAW.order,
+                    Answers = new List<BackstoryAnswer>(),
+                    AnswerID = new List<string>(),
+                    Races = new List<Character.Race>(),
+                    Professions = new List<Character.Profession>()
+                };
+
+                if (bsRAW.races != null)
                 {
-                    newBS.Professions.Add((Character.Profession)Enum.Parse(typeof(Character.Profession), bsRAW.professions[i]));
+                    for (int i = 0; i < bsRAW.races.Length; i++)
+                    {
+                        newBS.Races.Add((Character.Race)Enum.Parse(typeof(Character.Race), bsRAW.races[i]));
+                    }
                 }
-            }
-            for (int i = 0; i < bsRAW.answers.Length; i++)
-            {
-                WebRequest request = WebRequest.Create("https://api.guildwars2.com/v2/backstory/answers/" + bsRAW.answers[i]);
-                WebResponse response = request.GetResponse();
-                Stream data = response.GetResponseStream();
-
-                string html = string.Empty;
-                using (StreamReader sr = new StreamReader(data))
+                if (bsRAW.professions != null)
                 {
-                    html = sr.ReadToEnd();
+                    for (int i = 0; i < bsRAW.professions.Length; i++)
+                    {
+                        newBS.Professions.Add((Character.Profession)Enum.Parse(typeof(Character.Profession), bsRAW.professions[i]));
+                    }
                 }
-                BackstoryAnswer newBSAns = BackstoryAnswer.GetAnswerFromJSON(html, main);
+                for (int i = 0; i < bsRAW.answers.Length; i++)
+                {
+                    newBS.AnswerID.Add(bsRAW.answers[i]);
+                }
 
-                newBS.Answers.Add(newBSAns);
+                main.BackstoryQuestions.Add(newBS);
+                main.OnCharStatusUpdate("Generated Backstory Question " + newBS.Question + ";" + newBS.ID + " " + ((cur != 0) ? Math.Round((double)(cur / max), 2) * 100 : 0).ToString() + "%");
             }
-
-            for (int i = 0; i < newBS.Answers.Count; i++)
-            {
-                newBS.Answers[i].Question = newBS;
-            }
-
-            main.OnCharStatusUpdate("Generated Backstory Question " + newBS.ID);
-            return newBS;
         }
     }
     class BackstoryQuestionRAW

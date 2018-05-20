@@ -14,40 +14,55 @@ namespace GW2Helper.Stuff
         public string Description { get; set; }
         public string Journal { get; set; }
         public BackstoryQuestion Question { get; set; }
+        public int QuestionID { get; set; }
         public List<Character.Profession> Professions { get; set; }
         public List<Character.Race> Races { get; set; }
 
-        public static BackstoryAnswer GetAnswerFromJSON(string json, Main main)
+        public static void GetAnswersFromJSON(string json, Main main)
         {
-            BackstoryAnswerRAW bsRAW = JsonConvert.DeserializeObject<BackstoryAnswerRAW>(json);
-            BackstoryAnswer newBS = new BackstoryAnswer
+            BackstoryAnswerRAW[] rawAnswers = new BackstoryAnswerRAW[1];
+            try
             {
-                ID = bsRAW.id,
-                Answer = bsRAW.title,
-                Description = bsRAW.description,
-                Journal = bsRAW.journal,
-                Races = new List<Character.Race>(),
-                Professions = new List<Character.Profession>()
-            };
-
-            if (bsRAW.races != null)
-            {
-                for (int i = 0; i < bsRAW.races.Length; i++)
-                {
-                    newBS.Races.Add((Character.Race)Enum.Parse(typeof(Character.Race), bsRAW.races[i]));
-                }
+                rawAnswers = JsonConvert.DeserializeObject<BackstoryAnswerRAW[]>(json);
             }
-            if (bsRAW.professions != null)
+            catch (Exception e)
             {
-                for (int i = 0; i < bsRAW.professions.Length; i++)
-                {
-                    newBS.Professions.Add((Character.Profession)Enum.Parse(typeof(Character.Profession), bsRAW.professions[i]));
-                }
+                rawAnswers[0] = JsonConvert.DeserializeObject<BackstoryAnswerRAW>(json);
             }
+            for (int a = 0; a < rawAnswers.Length; a++)
+            {
+                double cur = a, max = rawAnswers.Length;
+                BackstoryAnswerRAW bsRAW = rawAnswers[a];
+                main.JSON.Add(new KeyValuePair<string, string>("BackstoryAnswer", JsonConvert.SerializeObject(bsRAW)));
+                BackstoryAnswer newBS = new BackstoryAnswer
+                {
+                    ID = bsRAW.id,
+                    Answer = bsRAW.title,
+                    Description = bsRAW.description,
+                    Journal = bsRAW.journal,
+                    QuestionID = bsRAW.question,
+                    Races = new List<Character.Race>(),
+                    Professions = new List<Character.Profession>()
+                };
 
-            main.BackstoryAnswers.Add(newBS);
-            main.OnCharStatusUpdate("Generated Backstory Answer " + newBS.ID);
-            return newBS;
+                if (bsRAW.races != null)
+                {
+                    for (int i = 0; i < bsRAW.races.Length; i++)
+                    {
+                        newBS.Races.Add((Character.Race)Enum.Parse(typeof(Character.Race), bsRAW.races[i]));
+                    }
+                }
+                if (bsRAW.professions != null)
+                {
+                    for (int i = 0; i < bsRAW.professions.Length; i++)
+                    {
+                        newBS.Professions.Add((Character.Profession)Enum.Parse(typeof(Character.Profession), bsRAW.professions[i]));
+                    }
+                }
+
+                main.BackstoryAnswers.Add(newBS);
+                main.OnCharStatusUpdate("Generated Backstory Answer " + newBS.Answer + ";" + newBS.ID + " " + ((cur != 0) ? Math.Round((double)(cur / max), 2) * 100 : 0).ToString() + "%");
+            }
         }
     }
 

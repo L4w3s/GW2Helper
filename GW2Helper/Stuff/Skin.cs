@@ -43,242 +43,304 @@ namespace GW2Helper.Stuff
         public string Description { get; set; }
         public Detail Details { get; set; }
 
-        public static Skin GetSkinFromJSON(string json, Main main)
+        public static void GetSkinsFromJSON(string json, Main main)
         {
-            SkinRAW skinRAW = JsonConvert.DeserializeObject<SkinRAW>(json);
-            Skin newSkin = new Skin
+            SkinRAW[] rawSkins = new SkinRAW[1];
+            try
             {
-                ID = skinRAW.id,
-                Name = skinRAW.name,
-                SkinType = (Type)Enum.Parse(typeof(Type), skinRAW.type),
-                Flags = new List<Flag>(),
-                Restrictions = new List<Restriction>(),
-                Rarity = skinRAW.rarity,
-                Description = skinRAW.description
-            };
-            for (int i = 0; i < skinRAW.flags.Length; i++)
-            {
-                newSkin.Flags.Add((Flag)Enum.Parse(typeof(Flag), skinRAW.flags[i]));
+                rawSkins = JsonConvert.DeserializeObject<SkinRAW[]>(json);
             }
-            for (int i = 0; i < skinRAW.restrictions.Length; i++)
+            catch (Exception e)
             {
-                newSkin.Restrictions.Add((Restriction)Enum.Parse(typeof(Restriction), skinRAW.restrictions[i]));
+                rawSkins[0] = JsonConvert.DeserializeObject<SkinRAW>(json);
             }
-
-            if (skinRAW.type == "Armor" && skinRAW.details != null)
+            for (int a = 0; a < rawSkins.Length; a++)
             {
-                SkinSub1RAW skinSub1RAW = skinRAW.details;
-                ArmorDetail newDetail = new ArmorDetail
-                {   
-                    ArmorType = (ArmorDetail.Type)Enum.Parse(typeof(ArmorDetail.Type), skinSub1RAW.type),
-                    Weight = (ArmorDetail.WeightClass)Enum.Parse(typeof(ArmorDetail.WeightClass), skinSub1RAW.weight_class)
-                };
-
-                SkinSub2RAW skinSub2RAW = skinSub1RAW.dye_slots;
-                DyeSlots dyeSlots = new DyeSlots();
-                for (int i = 0; i < skinSub2RAW.def.Length; i++)
+                double cur = a, max = rawSkins.Length;
+                SkinRAW skinRAW = rawSkins[a];
+                main.JSON.Add(new KeyValuePair<string, string>("Skin", JsonConvert.SerializeObject(skinRAW)));
+                Skin newSkin = new Skin
                 {
-                    SkinSub3RAW skinSub3RAW = skinSub2RAW.def[i];
-                    int colourID = skinSub3RAW.color_id;
-                    Colour colour = main.Colours.FirstOrDefault(col => col.ID == colourID);
-                    Dye newDye = new Dye
+                    ID = skinRAW.id,
+                    Name = skinRAW.name,
+                    SkinType = (Type)Enum.Parse(typeof(Type), skinRAW.type),
+                    Flags = new List<Flag>(),
+                    Restrictions = new List<Restriction>(),
+                    Rarity = skinRAW.rarity,
+                    Description = skinRAW.description
+                };
+                for (int i = 0; i < skinRAW.flags.Length; i++)
+                {
+                    newSkin.Flags.Add((Flag)Enum.Parse(typeof(Flag), skinRAW.flags[i]));
+                }
+                for (int i = 0; i < skinRAW.restrictions.Length; i++)
+                {
+                    newSkin.Restrictions.Add((Restriction)Enum.Parse(typeof(Restriction), skinRAW.restrictions[i]));
+                }
+
+                if (skinRAW.type == "Armor" && skinRAW.details != null)
+                {
+                    SkinSub1RAW skinSub1RAW = skinRAW.details;
+                    ArmorDetail newDetail = new ArmorDetail
                     {
-                        Color = colour,
-                        DyeMaterial = (Dye.Material)Enum.Parse(typeof(Dye.Material), skinSub3RAW.material)
+                        ArmorType = (ArmorDetail.Type)Enum.Parse(typeof(ArmorDetail.Type), skinSub1RAW.type),
+                        Weight = (ArmorDetail.WeightClass)Enum.Parse(typeof(ArmorDetail.WeightClass), skinSub1RAW.weight_class)
                     };
-                    dyeSlots.Dyes.Add(newDye);
+
+                    if (skinSub1RAW.dye_slots != null)
+                    {
+                        SkinSub2RAW skinSub2RAW = skinSub1RAW.dye_slots; DyeSlots dyeSlots = new DyeSlots();
+                        if (skinSub2RAW.def != null)
+                        {
+                            for (int i = 0; i < skinSub2RAW.def.Length; i++)
+                            {
+                                SkinSub3RAW skinSub3RAW = skinSub2RAW.def[i];
+                                int colourID = skinSub3RAW.color_id;
+                                Colour colour = main.Colours.FirstOrDefault(col => col.ID == colourID);
+                                Dye newDye = new Dye
+                                {
+                                    Color = colour,
+                                    DyeMaterial = (Dye.Material)Enum.Parse(typeof(Dye.Material), skinSub3RAW.material)
+                                };
+                                dyeSlots.Dyes.Add(newDye);
+                            }
+                        }
+
+                        if (skinSub2RAW.overrides != null)
+                        {
+                            DyeOverride dyeOverride = new DyeOverride();
+                            SkinSub4RAW skinSub4RAW = skinSub2RAW.overrides;
+                            if (skinSub4RAW.AsuraMale != null)
+                            {
+                                dyeOverride.AsuraMale = new List<Dye>();
+                                for (int i = 0; i < skinSub4RAW.AsuraMale.Length; i++)
+                                {
+                                    if (skinSub4RAW.AsuraMale[i] != null)
+                                    {
+                                        SkinSub3RAW skinSub3RAW = skinSub4RAW.AsuraMale[i];
+                                        int colourID = skinSub3RAW.color_id;
+                                        Colour colour = main.Colours.FirstOrDefault(col => col.ID == colourID);
+                                        Dye newDye = new Dye
+                                        {
+                                            Color = colour,
+                                            DyeMaterial = (Dye.Material)Enum.Parse(typeof(Dye.Material), skinSub3RAW.material)
+                                        };
+                                        dyeOverride.AsuraMale.Add(newDye);
+                                    }
+                                }
+                            }
+                            if (skinSub4RAW.AsuraFemale != null)
+                            {
+                                dyeOverride.AsuraFemale = new List<Dye>();
+                                for (int i = 0; i < skinSub4RAW.AsuraFemale.Length; i++)
+                                {
+                                    if (skinSub4RAW.AsuraFemale[i] != null)
+                                    {
+                                        SkinSub3RAW skinSub3RAW = skinSub4RAW.AsuraFemale[i];
+                                        int colourID = skinSub3RAW.color_id;
+                                        Colour colour = main.Colours.FirstOrDefault(col => col.ID == colourID);
+                                        Dye newDye = new Dye
+                                        {
+                                            Color = colour,
+                                            DyeMaterial = (Dye.Material)Enum.Parse(typeof(Dye.Material), skinSub3RAW.material)
+                                        };
+                                        dyeOverride.AsuraFemale.Add(newDye);
+                                    }
+                                }
+                            }
+                            if (skinSub4RAW.CharrMale != null)
+                            {
+                                dyeOverride.CharrMale = new List<Dye>();
+                                for (int i = 0; i < skinSub4RAW.CharrMale.Length; i++)
+                                {
+                                    if (skinSub4RAW.CharrMale[i] != null)
+                                    {
+                                        SkinSub3RAW skinSub3RAW = skinSub4RAW.CharrMale[i];
+                                        int colourID = skinSub3RAW.color_id;
+                                        Colour colour = main.Colours.FirstOrDefault(col => col.ID == colourID);
+                                        Dye newDye = new Dye
+                                        {
+                                            Color = colour,
+                                            DyeMaterial = (Dye.Material)Enum.Parse(typeof(Dye.Material), skinSub3RAW.material)
+                                        };
+                                        dyeOverride.CharrMale.Add(newDye);
+                                    }
+                                }
+                            }
+                            if (skinSub4RAW.CharrFemale != null)
+                            {
+                                dyeOverride.CharrFemale = new List<Dye>();
+                                for (int i = 0; i < skinSub4RAW.CharrFemale.Length; i++)
+                                {
+                                    if (skinSub4RAW.CharrFemale[i] != null)
+                                    {
+                                        SkinSub3RAW skinSub3RAW = skinSub4RAW.CharrFemale[i];
+                                        int colourID = skinSub3RAW.color_id;
+                                        Colour colour = main.Colours.FirstOrDefault(col => col.ID == colourID);
+                                        Dye newDye = new Dye
+                                        {
+                                            Color = colour,
+                                            DyeMaterial = (Dye.Material)Enum.Parse(typeof(Dye.Material), skinSub3RAW.material)
+                                        };
+                                        dyeOverride.CharrFemale.Add(newDye);
+                                    }
+                                }
+                            }
+                            if (skinSub4RAW.HumanMale != null)
+                            {
+                                dyeOverride.HumanMale = new List<Dye>();
+                                for (int i = 0; i < skinSub4RAW.HumanMale.Length; i++)
+                                {
+                                    if (skinSub4RAW.HumanMale[i] != null)
+                                    {
+                                        SkinSub3RAW skinSub3RAW = skinSub4RAW.HumanMale[i];
+                                        int colourID = skinSub3RAW.color_id;
+                                        Colour colour = main.Colours.FirstOrDefault(col => col.ID == colourID);
+                                        Dye newDye = new Dye
+                                        {
+                                            Color = colour,
+                                            DyeMaterial = (Dye.Material)Enum.Parse(typeof(Dye.Material), skinSub3RAW.material)
+                                        };
+                                        dyeOverride.HumanMale.Add(newDye);
+                                    }
+                                }
+                            }
+                            if (skinSub4RAW.HumanFemale != null)
+                            {
+                                dyeOverride.HumanFemale = new List<Dye>();
+                                for (int i = 0; i < skinSub4RAW.HumanFemale.Length; i++)
+                                {
+                                    if (skinSub4RAW.HumanFemale[i] != null)
+                                    {
+                                        SkinSub3RAW skinSub3RAW = skinSub4RAW.HumanFemale[i];
+                                        int colourID = skinSub3RAW.color_id;
+                                        Colour colour = main.Colours.FirstOrDefault(col => col.ID == colourID);
+                                        Dye newDye = new Dye
+                                        {
+                                            Color = colour,
+                                            DyeMaterial = (Dye.Material)Enum.Parse(typeof(Dye.Material), skinSub3RAW.material)
+                                        };
+                                        dyeOverride.HumanFemale.Add(newDye);
+                                    }
+                                }
+                            }
+                            if (skinSub4RAW.NornMale != null)
+                            {
+                                dyeOverride.NornMale = new List<Dye>();
+                                for (int i = 0; i < skinSub4RAW.NornMale.Length; i++)
+                                {
+                                    if (skinSub4RAW.NornMale[i] != null)
+                                    {
+                                        SkinSub3RAW skinSub3RAW = skinSub4RAW.NornMale[i];
+                                        int colourID = skinSub3RAW.color_id;
+                                        Colour colour = main.Colours.FirstOrDefault(col => col.ID == colourID);
+                                        Dye newDye = new Dye
+                                        {
+                                            Color = colour,
+                                            DyeMaterial = (Dye.Material)Enum.Parse(typeof(Dye.Material), skinSub3RAW.material)
+                                        };
+                                        dyeOverride.NornMale.Add(newDye);
+                                    }
+                                }
+                            }
+                            if (skinSub4RAW.NornFemale != null)
+                            {
+                                dyeOverride.NornFemale = new List<Dye>();
+                                for (int i = 0; i < skinSub4RAW.NornFemale.Length; i++)
+                                {
+                                    if (skinSub4RAW.NornFemale[i] != null)
+                                    {
+                                        SkinSub3RAW skinSub3RAW = skinSub4RAW.NornFemale[i];
+                                        int colourID = skinSub3RAW.color_id;
+                                        Colour colour = main.Colours.FirstOrDefault(col => col.ID == colourID);
+                                        Dye newDye = new Dye
+                                        {
+                                            Color = colour,
+                                            DyeMaterial = (Dye.Material)Enum.Parse(typeof(Dye.Material), skinSub3RAW.material)
+                                        };
+                                        dyeOverride.NornFemale.Add(newDye);
+                                    }
+                                }
+                            }
+                            if (skinSub4RAW.SylvariMale != null)
+                            {
+                                dyeOverride.SylvariMale = new List<Dye>();
+                                for (int i = 0; i < skinSub4RAW.SylvariMale.Length; i++)
+                                {
+                                    if (skinSub4RAW.SylvariMale[i] != null)
+                                    {
+                                        SkinSub3RAW skinSub3RAW = skinSub4RAW.SylvariMale[i];
+                                        int colourID = skinSub3RAW.color_id;
+                                        Colour colour = main.Colours.FirstOrDefault(col => col.ID == colourID);
+                                        Dye newDye = new Dye
+                                        {
+                                            Color = colour,
+                                            DyeMaterial = (Dye.Material)Enum.Parse(typeof(Dye.Material), skinSub3RAW.material)
+                                        };
+                                        dyeOverride.SylvariMale.Add(newDye);
+                                    }
+                                }
+                            }
+                            if (skinSub4RAW.SylvariFemale != null)
+                            {
+                                dyeOverride.SylvariFemale = new List<Dye>();
+                                for (int i = 0; i < skinSub4RAW.SylvariFemale.Length; i++)
+                                {
+                                    if (skinSub4RAW.SylvariFemale[i] != null)
+                                    {
+                                        SkinSub3RAW skinSub3RAW = skinSub4RAW.SylvariFemale[i];
+                                        int colourID = skinSub3RAW.color_id;
+                                        Colour colour = main.Colours.FirstOrDefault(col => col.ID == colourID);
+                                        Dye newDye = new Dye
+                                        {
+                                            Color = colour,
+                                            DyeMaterial = (Dye.Material)Enum.Parse(typeof(Dye.Material), skinSub3RAW.material)
+                                        };
+                                        dyeOverride.SylvariFemale.Add(newDye);
+                                    }
+                                }
+                            }
+
+                            dyeSlots.Overrides = dyeOverride;
+                        }
+                        newDetail.Dyes = dyeSlots;
+                    }
+                    
+                    newSkin.Details = newDetail;
+                }
+                else if (skinRAW.type == "Weapon" && skinRAW.details != null)
+                {
+                    SkinSub1RAW skinSub1RAW = skinRAW.details;
+                    WeaponDetail newDetail = new WeaponDetail
+                    {
+                        WeaponType = (WeaponDetail.Type)Enum.Parse(typeof(WeaponDetail.Type), skinSub1RAW.type),
+                        Damage = (WeaponDetail.DamageType)Enum.Parse(typeof(WeaponDetail.DamageType), skinSub1RAW.damage_type)
+                    };
+                    newSkin.Details = newDetail;
+                }
+                else if (skinRAW.type == "Gathering" && skinRAW.details != null)
+                {
+                    SkinSub1RAW skinSub1RAW = skinRAW.details;
+                    GatheringDetail newDetail = new GatheringDetail
+                    {
+                        GatheringType = (GatheringDetail.Type)Enum.Parse(typeof(GatheringDetail.Type), skinSub1RAW.type)
+                    };
+                    newSkin.Details = newDetail;
+                }
+                if (skinRAW.icon != null)
+                {
+                    string fileName = string.Empty;
+                    using (WebClient client = new WebClient())
+                    {
+                        fileName = skinRAW.icon.Substring(skinRAW.icon.LastIndexOf("/") + 1);
+                        if (!File.Exists(AppDomain.CurrentDomain.BaseDirectory + @"\images\skins\" + fileName)) client.DownloadFileAsync(new Uri(skinRAW.icon), AppDomain.CurrentDomain.BaseDirectory + @"\images\skins\" + fileName);
+                    }
+                    newSkin.Image = AppDomain.CurrentDomain.BaseDirectory + @"\images\skins\" + fileName;
                 }
 
-                if (skinSub2RAW.overrides != null)
-                {
-                    DyeOverride dyeOverride = new DyeOverride();
-                    SkinSub4RAW skinSub4RAW = skinSub2RAW.overrides;
-                    if (skinSub4RAW.AsuraMale != null)
-                    {
-                        for (int i = 0; i < skinSub4RAW.AsuraMale.Length; i++)
-                        {
-                            SkinSub3RAW skinSub3RAW = skinSub4RAW.AsuraMale[i];
-                            int colourID = skinSub3RAW.color_id;
-                            Colour colour = main.Colours.FirstOrDefault(col => col.ID == colourID);
-                            Dye newDye = new Dye
-                            {
-                                Color = colour,
-                                DyeMaterial = (Dye.Material)Enum.Parse(typeof(Dye.Material), skinSub3RAW.material)
-                            };
-                            dyeOverride.AsuraMale.Add(newDye);
-                        }
-                    }
-                    if (skinSub4RAW.AsuraFemale != null)
-                    {
-                        for (int i = 0; i < skinSub4RAW.AsuraFemale.Length; i++)
-                        {
-                            SkinSub3RAW skinSub3RAW = skinSub4RAW.AsuraFemale[i];
-                            int colourID = skinSub3RAW.color_id;
-                            Colour colour = main.Colours.FirstOrDefault(col => col.ID == colourID);
-                            Dye newDye = new Dye
-                            {
-                                Color = colour,
-                                DyeMaterial = (Dye.Material)Enum.Parse(typeof(Dye.Material), skinSub3RAW.material)
-                            };
-                            dyeOverride.AsuraFemale.Add(newDye);
-                        }
-                    }
-                    if (skinSub4RAW.CharrMale != null)
-                    {
-                        for (int i = 0; i < skinSub4RAW.CharrMale.Length; i++)
-                        {
-                            SkinSub3RAW skinSub3RAW = skinSub4RAW.CharrMale[i];
-                            int colourID = skinSub3RAW.color_id;
-                            Colour colour = main.Colours.FirstOrDefault(col => col.ID == colourID);
-                            Dye newDye = new Dye
-                            {
-                                Color = colour,
-                                DyeMaterial = (Dye.Material)Enum.Parse(typeof(Dye.Material), skinSub3RAW.material)
-                            };
-                            dyeOverride.CharrMale.Add(newDye);
-                        }
-                    }
-                    if (skinSub4RAW.CharrFemale != null)
-                    {
-                        for (int i = 0; i < skinSub4RAW.CharrFemale.Length; i++)
-                        {
-                            SkinSub3RAW skinSub3RAW = skinSub4RAW.CharrFemale[i];
-                            int colourID = skinSub3RAW.color_id;
-                            Colour colour = main.Colours.FirstOrDefault(col => col.ID == colourID);
-                            Dye newDye = new Dye
-                            {
-                                Color = colour,
-                                DyeMaterial = (Dye.Material)Enum.Parse(typeof(Dye.Material), skinSub3RAW.material)
-                            };
-                            dyeOverride.CharrFemale.Add(newDye);
-                        }
-                    }
-                    if (skinSub4RAW.HumanMale != null)
-                    {
-                        for (int i = 0; i < skinSub4RAW.HumanMale.Length; i++)
-                        {
-                            SkinSub3RAW skinSub3RAW = skinSub4RAW.HumanMale[i];
-                            int colourID = skinSub3RAW.color_id;
-                            Colour colour = main.Colours.FirstOrDefault(col => col.ID == colourID);
-                            Dye newDye = new Dye
-                            {
-                                Color = colour,
-                                DyeMaterial = (Dye.Material)Enum.Parse(typeof(Dye.Material), skinSub3RAW.material)
-                            };
-                            dyeOverride.HumanMale.Add(newDye);
-                        }
-                    }
-                    if (skinSub4RAW.HumanFemale != null)
-                    {
-                        for (int i = 0; i < skinSub4RAW.HumanFemale.Length; i++)
-                        {
-                            SkinSub3RAW skinSub3RAW = skinSub4RAW.HumanFemale[i];
-                            int colourID = skinSub3RAW.color_id;
-                            Colour colour = main.Colours.FirstOrDefault(col => col.ID == colourID);
-                            Dye newDye = new Dye
-                            {
-                                Color = colour,
-                                DyeMaterial = (Dye.Material)Enum.Parse(typeof(Dye.Material), skinSub3RAW.material)
-                            };
-                            dyeOverride.HumanFemale.Add(newDye);
-                        }
-                    }
-                    if (skinSub4RAW.NornMale != null)
-                    {
-                        for (int i = 0; i < skinSub4RAW.NornMale.Length; i++)
-                        {
-                            SkinSub3RAW skinSub3RAW = skinSub4RAW.NornMale[i];
-                            int colourID = skinSub3RAW.color_id;
-                            Colour colour = main.Colours.FirstOrDefault(col => col.ID == colourID);
-                            Dye newDye = new Dye
-                            {
-                                Color = colour,
-                                DyeMaterial = (Dye.Material)Enum.Parse(typeof(Dye.Material), skinSub3RAW.material)
-                            };
-                            dyeOverride.NornMale.Add(newDye);
-                        }
-                    }
-                    if (skinSub4RAW.NornFemale != null)
-                    {
-                        for (int i = 0; i < skinSub4RAW.NornFemale.Length; i++)
-                        {
-                            SkinSub3RAW skinSub3RAW = skinSub4RAW.NornFemale[i];
-                            int colourID = skinSub3RAW.color_id;
-                            Colour colour = main.Colours.FirstOrDefault(col => col.ID == colourID);
-                            Dye newDye = new Dye
-                            {
-                                Color = colour,
-                                DyeMaterial = (Dye.Material)Enum.Parse(typeof(Dye.Material), skinSub3RAW.material)
-                            };
-                            dyeOverride.NornFemale.Add(newDye);
-                        }
-                    }
-                    if (skinSub4RAW.SylvariMale != null)
-                    {
-                        for (int i = 0; i < skinSub4RAW.SylvariMale.Length; i++)
-                        {
-                            SkinSub3RAW skinSub3RAW = skinSub4RAW.SylvariMale[i];
-                            int colourID = skinSub3RAW.color_id;
-                            Colour colour = main.Colours.FirstOrDefault(col => col.ID == colourID);
-                            Dye newDye = new Dye
-                            {
-                                Color = colour,
-                                DyeMaterial = (Dye.Material)Enum.Parse(typeof(Dye.Material), skinSub3RAW.material)
-                            };
-                            dyeOverride.SylvariMale.Add(newDye);
-                        }
-                    }
-                    if (skinSub4RAW.SylvariFemale != null)
-                    {
-                        for (int i = 0; i < skinSub4RAW.SylvariFemale.Length; i++)
-                        {
-                            SkinSub3RAW skinSub3RAW = skinSub4RAW.SylvariFemale[i];
-                            int colourID = skinSub3RAW.color_id;
-                            Colour colour = main.Colours.FirstOrDefault(col => col.ID == colourID);
-                            Dye newDye = new Dye
-                            {
-                                Color = colour,
-                                DyeMaterial = (Dye.Material)Enum.Parse(typeof(Dye.Material), skinSub3RAW.material)
-                            };
-                            dyeOverride.SylvariFemale.Add(newDye);
-                        }
-                    }
-
-                    dyeSlots.Overrides = dyeOverride;
-                }
-                newDetail.Dyes = dyeSlots;
-
-                newSkin.Details = newDetail;
+                main.Skins.Add(newSkin);
+                main.OnCharStatusUpdate("Generated Skin " + newSkin.Name + ";" + newSkin.ID + " " + ((cur != 0) ? Math.Round((double)(cur / max), 2) * 100 : 0).ToString() + "%");
             }
-            else if (skinRAW.type == "Weapon" && skinRAW.details != null)
-            {
-                SkinSub1RAW skinSub1RAW = skinRAW.details;
-                WeaponDetail newDetail = new WeaponDetail
-                {
-                    WeaponType = (WeaponDetail.Type)Enum.Parse(typeof(WeaponDetail.Type), skinSub1RAW.type),
-                    Damage = (WeaponDetail.DamageType)Enum.Parse(typeof(WeaponDetail.DamageType), skinSub1RAW.damage_type)
-                };
-                newSkin.Details = newDetail;
-            }
-            else if (skinRAW.type == "Gathering" && skinRAW.details != null)
-            {
-                SkinSub1RAW skinSub1RAW = skinRAW.details;
-                GatheringDetail newDetail = new GatheringDetail
-                {
-                    GatheringType = (GatheringDetail.Type)Enum.Parse(typeof(GatheringDetail.Type), skinSub1RAW.type)
-                };
-                newSkin.Details = newDetail;
-            }
-            string fileName = string.Empty;
-            using (WebClient client = new WebClient())
-            {
-                fileName = skinRAW.icon.Substring(skinRAW.icon.LastIndexOf("/") + 1);
-                if (!File.Exists(AppDomain.CurrentDomain.BaseDirectory + @"\images\skins\" + fileName)) client.DownloadFileAsync(new Uri(skinRAW.icon), AppDomain.CurrentDomain.BaseDirectory + @"\images\skins\" + fileName);
-            }
-            newSkin.Image = AppDomain.CurrentDomain.BaseDirectory + @"\images\skins\" + fileName;
-
-            main.OnCharStatusUpdate("Generated Skin " + newSkin.ID);
-            return newSkin;
         }
     }
 
@@ -315,6 +377,7 @@ namespace GW2Helper.Stuff
             Axe,
             Dagger,
             Mace,
+            Spear,
             Pistol,
             Scepter,
             Sword,
@@ -324,9 +387,9 @@ namespace GW2Helper.Stuff
             Warhorn,
             Greatsword,
             Hammer,
-            LongBow,
+            Longbow,
             Rifle,
-            ShortBow,
+            Shortbow,
             Staff,
             Harpoon,
             Speargun,
@@ -334,7 +397,7 @@ namespace GW2Helper.Stuff
             LargeBundle,
             SmallBundle,
             Toy,
-            TwoHandedToy
+            ToyTwoHanded
         }
         public enum DamageType
         {
@@ -381,9 +444,9 @@ namespace GW2Helper.Stuff
     {
         public enum Material
         {
-            Cloth,
-            Leather,
-            Metal
+            cloth,
+            leather,
+            metal
         }
         public Colour Color { get; set; }
         public Material DyeMaterial { get; set; }

@@ -1,10 +1,11 @@
-﻿<dx:ThemedWindow x:Class="GW2Helper.MainWindow"
+﻿<dx:DXWindow x:Class="GW2Helper.MainWindow"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:dx="http://schemas.devexpress.com/winfx/2008/xaml/core"
         xmlns:dxb="http://schemas.devexpress.com/winfx/2008/xaml/bars"
         x:Name="GWTwoHelper"
-        Title="Guild Wars 2 Buddy" Height="720" Width="1280" WindowStartupLocation="CenterScreen" WindowState="Maximized" TitleAlignment="Center" Loaded="GWTwoHelper_Loaded">
+        xmlns:local="clr-namespace:GW2Helper"
+        Title="Guild Wars 2 Buddy" Height="720" Width="1280" WindowStartupLocation="CenterScreen" WindowState="Maximized" Loaded="GWTwoHelper_Loaded" Closing="GWTwoHelper_Closing" IsAeroMode="True" BorderEffect="Default">
     <Grid>
         <Grid.ColumnDefinitions>
             <ColumnDefinition/>
@@ -79,6 +80,63 @@
             <Label x:Name="journal_name" VerticalAlignment="Stretch" HorizontalAlignment="Stretch" VerticalContentAlignment="Center" HorizontalContentAlignment="Center" Grid.Row="2" Grid.RowSpan="4" Grid.Column="1" Grid.ColumnSpan="6" FontSize="36" Foreground="Black" FontFamily="Pristina"/>
             <TextBlock x:Name="journal_entry" TextAlignment="Center" HorizontalAlignment="Stretch" VerticalAlignment="Top" TextWrapping="Wrap" Grid.Row="6" Grid.RowSpan="24" Grid.Column="1" Grid.ColumnSpan="6" FontSize="20" Foreground="Black" FontFamily="Pristina"/>
         </Grid> <!-- Journal -->
+        <Grid Grid.ColumnSpan="2" Grid.Row="5" Grid.RowSpan="3">
+            <ScrollViewer VerticalScrollBarVisibility="Auto">
+                <ItemsControl x:Name="inv_1" HorizontalContentAlignment="Stretch" Background="Transparent" BorderBrush="Black" BorderThickness="1">
+                    <ItemsControl.ItemsPanel>
+                        <ItemsPanelTemplate>
+                            <WrapPanel HorizontalAlignment="Center"/>
+                        </ItemsPanelTemplate>
+                    </ItemsControl.ItemsPanel>
+                    <ItemsControl.ItemTemplate>
+                        <DataTemplate>
+                            <Grid x:Name="inv_item" Tag="{Binding Item.ID}" Width="64" Height="64" MouseEnter="inv_item_MouseEnter" MouseLeave="inv_item_MouseLeave" MouseMove="inv_item_MouseMove">
+                                <Image Source="{Binding Item.Image}" VerticalAlignment="Stretch" HorizontalAlignment="Stretch" Stretch="Fill"/>
+                                <local:OutlinedTextBlock VerticalAlignment="Stretch" HorizontalAlignment="Stretch" FontSize="18" Margin="5,0,0,0" Text="{Binding Count}" Fill="White" Stroke="Black" StrokeThickness="2"/>
+                            </Grid>
+                        </DataTemplate>
+                    </ItemsControl.ItemTemplate>
+                </ItemsControl>
+            </ScrollViewer>
+        </Grid>
+        <Grid Grid.Column="2" Grid.ColumnSpan="2" Grid.Row="5" Grid.RowSpan="3">
+            <ScrollViewer VerticalScrollBarVisibility="Auto">
+                <ItemsControl x:Name="inv_2" HorizontalContentAlignment="Stretch" Background="Transparent" BorderBrush="Black" BorderThickness="1">
+                    <ItemsControl.ItemsPanel>
+                        <ItemsPanelTemplate>
+                            <WrapPanel HorizontalAlignment="Center"/>
+                        </ItemsPanelTemplate>
+                    </ItemsControl.ItemsPanel>
+                    <ItemsControl.ItemTemplate>
+                        <DataTemplate>
+                            <Grid x:Name="inv_item" Tag="{Binding Item.ID}" Width="64" Height="64" MouseEnter="inv_item_MouseEnter" MouseLeave="inv_item_MouseLeave" MouseMove="inv_item_MouseMove">
+                                <Image Source="{Binding Item.Image}" VerticalAlignment="Stretch" HorizontalAlignment="Stretch" Stretch="Fill"/>
+                                <local:OutlinedTextBlock VerticalAlignment="Stretch" HorizontalAlignment="Stretch" FontSize="18" Margin="5,0,0,0" Text="{Binding Count}" Fill="White" Stroke="Black" StrokeThickness="2"/>
+                            </Grid>
+                        </DataTemplate>
+                    </ItemsControl.ItemTemplate>
+                </ItemsControl>
+            </ScrollViewer>
+        </Grid>
+        <Grid Grid.Column="4" Grid.ColumnSpan="2" Grid.Row="5" Grid.RowSpan="3">
+            <ScrollViewer VerticalScrollBarVisibility="Auto">
+                <ItemsControl x:Name="inv_3" HorizontalContentAlignment="Stretch" Background="Transparent" BorderBrush="Black" BorderThickness="1">
+                    <ItemsControl.ItemsPanel>
+                        <ItemsPanelTemplate>
+                            <WrapPanel HorizontalAlignment="Center"/>
+                        </ItemsPanelTemplate>
+                    </ItemsControl.ItemsPanel>
+                    <ItemsControl.ItemTemplate>
+                        <DataTemplate>
+                            <Grid x:Name="inv_item" Tag="{Binding Item.ID}" Width="64" Height="64" MouseEnter="inv_item_MouseEnter" MouseLeave="inv_item_MouseLeave" MouseMove="inv_item_MouseMove">
+                                <Image Source="{Binding Item.Image}" VerticalAlignment="Stretch" HorizontalAlignment="Stretch" Stretch="Fill"/>
+                                <local:OutlinedTextBlock VerticalAlignment="Stretch" HorizontalAlignment="Stretch" FontSize="18" Margin="5,0,0,0" Text="{Binding Count}" Fill="White" Stroke="Black" StrokeThickness="2"/>
+                            </Grid>
+                        </DataTemplate>
+                    </ItemsControl.ItemTemplate>
+                </ItemsControl>
+            </ScrollViewer>
+        </Grid>
         <Grid Grid.Column="5" Grid.ColumnSpan="3" Grid.RowSpan="1">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition/>
@@ -92,9 +150,34 @@
             <Button x:Name="btn_loadchar" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Grid.Column="2" Click="btn_loadchar_Click">
                 <TextBlock Text="Load Characters" HorizontalAlignment="Stretch" VerticalAlignment="Center" FontSize="18" TextWrapping="Wrap" TextAlignment="Center"/>
             </Button>
-            <TextBox x:Name="txt_api" TextWrapping="Wrap" Grid.ColumnSpan="2" VerticalAlignment="Stretch" HorizontalAlignment="Stretch" VerticalContentAlignment="Center" HorizontalContentAlignment="Center" FontSize="18"/>
-            <Label x:Name="lbl_charloaddetails" Grid.Row="1" Grid.ColumnSpan="3" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" FontSize="18"/>
+            <TextBox x:Name="txt_api" TextWrapping="Wrap" Grid.ColumnSpan="2" VerticalAlignment="Stretch" HorizontalAlignment="Stretch" VerticalContentAlignment="Center" HorizontalContentAlignment="Center" FontSize="14"/>
+            <Label x:Name="lbl_loaddetails" Grid.Row="1" Grid.ColumnSpan="2" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" FontSize="18"/>
+            <Label x:Name="lbl_loadid" Grid.Row="1" Grid.Column="2" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" FontSize="18"/>
         </Grid>
         <ListBox x:Name="lst_characters" Grid.Row="1" Grid.Column="6" Grid.ColumnSpan="2" Grid.RowSpan="7" FontSize="22" DisplayMemberPath="CharacterName" SelectedValuePath="APIToken" VerticalAlignment="Stretch" HorizontalAlignment="Stretch" VerticalContentAlignment="Center" HorizontalContentAlignment="Center" MouseDoubleClick="lst_characters_MouseDoubleClick"/>
+
+        <Grid x:Name="tooltip" Grid.RowSpan="8" Grid.ColumnSpan="8" Width="400" MinHeight="64" VerticalAlignment="Top" HorizontalAlignment="Left" Visibility="Collapsed">
+            <Border BorderBrush="#FF434346" Background="#FF333337" BorderThickness="2">
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="64"/>
+                        <ColumnDefinition/>
+                    </Grid.ColumnDefinitions>
+                    <Border BorderBrush="Black" BorderThickness="1" VerticalAlignment="Top" Height="64" Width="64">
+                        <Image x:Name="tooltip_image" VerticalAlignment="Top" Height="64" Width="64"/>
+                    </Border>
+                    <Grid Grid.Column="1">
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="32"/>
+                            <RowDefinition/>
+                        </Grid.RowDefinitions>
+                        <Label x:Name="tooltip_name" VerticalAlignment="Stretch" HorizontalAlignment="Stretch" VerticalContentAlignment="Center" HorizontalContentAlignment="Left" FontSize="16" Margin="5,0,0,0"/>
+                        <Label x:Name="tooltip_type" VerticalAlignment="Stretch" HorizontalAlignment="Stretch" VerticalContentAlignment="Center" HorizontalContentAlignment="Right" FontSize="12" FontStyle="Italic" Margin="0,0,5,0"/>
+                        <TextBlock Grid.Row="1" x:Name="tooltip_description" VerticalAlignment="Center" HorizontalAlignment="Stretch" TextAlignment="Center" TextWrapping="Wrap" FontSize="16" Margin="5,0,5,5"/>
+                    </Grid>
+                </Grid>
+                
+            </Border>
+        </Grid>
     </Grid>
-</dx:ThemedWindow>
+</dx:DXWindow>

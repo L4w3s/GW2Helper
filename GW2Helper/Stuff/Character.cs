@@ -54,7 +54,7 @@ namespace GW2Helper.Stuff
         public List<CraftingSkill> CraftingSkills { get; set; }
         public EquipmentContainer Equips { get; set; }
         public List<string> Heropoints { get; set; }
-        public Inventory Bags { get; set; }
+        public Inventory Inv { get; set; }
         public List<Skill> Skills { get; set; }
         public List<Specialization> Specializations { get; set; }
         public List<string> WVWAbilities { get; set; }
@@ -76,7 +76,8 @@ namespace GW2Helper.Stuff
                 Level = charRAW.level,
                 Age = charRAW.age,
                 CreationDate = DateTime.Parse(charRAW.created),
-                Deaths = charRAW.deaths
+                Deaths = charRAW.deaths,
+                Inv = new Inventory()
             };
 
             for (int i = 0; i < charRAW.backstory.Length; i++)
@@ -89,22 +90,118 @@ namespace GW2Helper.Stuff
 
             if (!string.IsNullOrEmpty(charRAW.guild))
             {
-                WebRequest request = WebRequest.Create("https://api.guildwars2.com/v2/guild/" + charRAW.guild);
+                string guildID = charRAW.guild;
+
+                WebRequest request = WebRequest.Create("https://api.guildwars2.com/v2/guild/" + guildID);
                 WebResponse response = request.GetResponse();
                 Stream data = response.GetResponseStream();
 
-                string html = string.Empty;
+                string html = null;
                 using (StreamReader sr = new StreamReader(data))
                 {
                     html = sr.ReadToEnd();
                 }
-                newChar.GuildInfo = Guild.GetGuildFromJSON(html, main);
+                Guild guild = Guild.GetGuildFromJSON(html, main);
+                newChar.GuildInfo = guild;
             }
-            //if (charRAW.title.HasValue) {
-            //    int titleID = charRAW.title.Value;
-            //    Title title = main.Titles.FirstOrDefault(ti => ti.ID == titleID);
-            //    newChar.CharTitle = title;
-            //}
+            if (charRAW.title.HasValue)
+            {
+                int titleID = charRAW.title.Value;
+                Title title = main.Titles.FirstOrDefault(ti => ti.ID == titleID);
+                newChar.CharTitle = title;
+            }
+            if (charRAW.bags != null)
+            {
+                newChar.Inv.Bags = new List<Bag>();
+
+                for (int i = 0; i < charRAW.bags.Length; i++)
+                {
+                    if (charRAW.bags[i] != null)
+                    {
+                        Bag bag = new Bag
+                        {
+                            ID = charRAW.bags[i].id,
+                            Size = charRAW.bags[i].size,
+                            Contents = new List<ItemStack>()
+                        };
+                        if (charRAW.bags[i].inventory != null)
+                        {
+                            for (int j = 0; j < charRAW.bags[i].inventory.Length; j++)
+                            {
+                                if (charRAW.bags[i].inventory[j] != null)
+                                {
+                                    ItemStack itemStack = new ItemStack
+                                    {
+                                        Count = charRAW.bags[i].inventory[j].count,
+                                        Infusions = new List<Item>(),
+                                        Upgrades = new List<Item>()
+                                    };
+                                    if (charRAW.bags[i].inventory[j].binding != null)
+                                    {
+                                        itemStack.ItemBinding = (ItemStack.Binding)Enum.Parse(typeof(ItemStack.Binding), charRAW.bags[i].inventory[j].binding);
+                                        itemStack.BoundTo = charRAW.bags[i].inventory[j].bound_to;
+                                    }
+
+                                    int itemID = charRAW.bags[i].inventory[j].id;
+                                    Item newItem = main.Items.FirstOrDefault(it => it.ID == itemID);
+                                    itemStack.Item = newItem;
+
+                                    if (charRAW.bags[i].inventory[j].skin.HasValue)
+                                    {
+                                        int skinID = charRAW.bags[i].inventory[j].skin.Value;
+                                        Skin newSkin = main.Skins.FirstOrDefault(sk => sk.ID == skinID);
+                                        itemStack.Skin = newSkin;
+                                    }
+
+                                    if (charRAW.bags[i].inventory[j].infusions != null)
+                                    {
+                                        for (int k = 0; k < charRAW.bags[i].inventory[j].infusions.Length; k++)
+                                        {
+                                            itemID = charRAW.bags[i].inventory[j].infusions[k].Value;
+                                            Item infusionItem = main.Items.FirstOrDefault(it => it.ID == itemID);
+                                            itemStack.Infusions.Add(infusionItem);
+                                        }
+                                    }
+                                    if (charRAW.bags[i].inventory[j].upgrades != null)
+                                    {
+                                        for (int k = 0; k < charRAW.bags[i].inventory[j].upgrades.Length; k++)
+                                        {
+                                            itemID = charRAW.bags[i].inventory[j].upgrades[k].Value;
+                                            Item upgradeItem = main.Items.FirstOrDefault(it => it.ID == itemID);
+                                            itemStack.Upgrades.Add(upgradeItem);
+                                        }
+                                    }
+
+                                    if (charRAW.bags[i].inventory[j].stats != null)
+                                    {
+                                        ItemStat itemStat = main.ItemStats.FirstOrDefault(it => it.ID == charRAW.bags[i].inventory[j].stats.id);
+                                        ItemStackAttribute itemStackAttribute = new ItemStackAttribute
+                                        {
+                                            Power = (charRAW.bags[i].inventory[j].stats.attributes.Power.HasValue) ? charRAW.bags[i].inventory[j].stats.attributes.Power.Value : 0,
+                                            Precision = (charRAW.bags[i].inventory[j].stats.attributes.Precision.HasValue) ? charRAW.bags[i].inventory[j].stats.attributes.Precision.Value : 0,
+                                            Toughness = (charRAW.bags[i].inventory[j].stats.attributes.Toughness.HasValue) ? charRAW.bags[i].inventory[j].stats.attributes.Toughness.Value : 0,
+                                            Vitality = (charRAW.bags[i].inventory[j].stats.attributes.Vitality.HasValue) ? charRAW.bags[i].inventory[j].stats.attributes.Vitality.Value : 0,
+                                            ConditionDamage = (charRAW.bags[i].inventory[j].stats.attributes.ConditionDamage.HasValue) ? charRAW.bags[i].inventory[j].stats.attributes.ConditionDamage.Value : 0,
+                                            ConditionDuration = (charRAW.bags[i].inventory[j].stats.attributes.ConditionDuration.HasValue) ? charRAW.bags[i].inventory[j].stats.attributes.ConditionDuration.Value : 0,
+                                            Healing = (charRAW.bags[i].inventory[j].stats.attributes.Healing.HasValue) ? charRAW.bags[i].inventory[j].stats.attributes.Healing.Value : 0,
+                                            BoonDuration = (charRAW.bags[i].inventory[j].stats.attributes.BoonDuration.HasValue) ? charRAW.bags[i].inventory[j].stats.attributes.BoonDuration.Value : 0
+                                        };
+                                        ItemStackStat itemStackStat = new ItemStackStat
+                                        {
+                                            Stat = itemStat,
+                                            Attributes = itemStackAttribute
+                                        };
+                                        itemStack.Stats = itemStackStat;
+                                    }
+
+                                    bag.Contents.Add(itemStack);
+                                }
+                            }
+                            newChar.Inv.Bags.Add(bag);
+                        }
+                    }
+                }
+            }
 
             main.OnCharStatusUpdate("Generated Character " + newChar.Name);
             return newChar;
@@ -128,7 +225,7 @@ namespace GW2Helper.Stuff
         public string[] backstory { get; set; }
         public WVWAbilitiesRAW[] wvw_abilities { get; set; }
         public SpecializationRAW specializations { get; set; }
-        public SkillRAW skills { get; set; }
+        public CharSkillRAW skills { get; set; }
         public EquipmentRAW[] equipment { get; set; }
         public int[] recipies { get; set; }
         public EquipmentPVPRAW equipment_pvp { get; set; }
@@ -161,7 +258,7 @@ namespace GW2Helper.Stuff
         public int id { get; set; }
         public int?[] traits { get; set; }
     }
-    class SkillRAW
+    class CharSkillRAW
     {
         public SkillSubRAW pve { get; set; }
         public SkillSubRAW pvp { get; set; }

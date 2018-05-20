@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace GW2Helper.Stuff.CharacterStuff
+namespace GW2Helper.Stuff
 {
     public class Training
     {

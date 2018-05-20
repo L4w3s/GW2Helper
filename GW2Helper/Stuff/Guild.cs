@@ -42,46 +42,24 @@ namespace GW2Helper.Stuff
             {
                 EmblemImage emblemImage = new EmblemImage();
 
-                WebRequest request = WebRequest.Create("https://api.guildwars2.com/v2/emblem/backgrounds/" + guildRAW.emblem.background.id);
-                WebResponse response = request.GetResponse();
-                Stream data = response.GetResponseStream();
-
-                string html = string.Empty;
-                using (StreamReader sr = new StreamReader(data))
-                {
-                    html = sr.ReadToEnd();
-                }
-                Emblem newEmblem = Emblem.GetEmblemFromJSON(html, false);
-                
                 for (int i = 0; i < guildRAW.emblem.background.colors.Length; i++)
                 {
                     emblemImage.Colours.Add(guildRAW.emblem.background.colors[i]);
                 }
+                emblemImage.EmblemObject = main.GuildEmblemBackgrounds.FirstOrDefault(em => em.ID == guildRAW.emblem.background.id);
 
-                emblemImage.EmblemObject = newEmblem;
                 newGuildEmblem.Background = emblemImage;
             }
             if (guildRAW.emblem.foreground != null)
             {
                 EmblemImage emblemImage = new EmblemImage();
 
-                WebRequest request = WebRequest.Create("https://api.guildwars2.com/v2/emblem/foregrounds/" + guildRAW.emblem.foreground.id);
-                WebResponse response = request.GetResponse();
-                Stream data = response.GetResponseStream();
-
-                string html = string.Empty;
-                using (StreamReader sr = new StreamReader(data))
-                {
-                    html = sr.ReadToEnd();
-                }
-                Emblem newEmblem = Emblem.GetEmblemFromJSON(html, true);
-
                 for (int i = 0; i < guildRAW.emblem.foreground.colors.Length; i++)
                 {
                     emblemImage.Colours.Add(guildRAW.emblem.foreground.colors[i]);
                 }
+                emblemImage.EmblemObject = main.GuildEmblemForegrounds.FirstOrDefault(em => em.ID == guildRAW.emblem.foreground.id);
 
-                emblemImage.EmblemObject = newEmblem;
                 newGuildEmblem.Background = emblemImage;
             }
             for (int i = 0; i < guildRAW.emblem.flags.Length; i++)
@@ -90,8 +68,8 @@ namespace GW2Helper.Stuff
             }
 
             newGuild.GuildEmblemObject = newGuildEmblem;
-
-            main.OnCharStatusUpdate("Generated Guild " + newGuild.ID);
+            
+            main.OnCharStatusUpdate("Generated Guild " + newGuild.Name + ";" + newGuild.ID);
             return newGuild;
         }
     }
@@ -115,28 +93,82 @@ namespace GW2Helper.Stuff
     {
         public int ID { get; set; }
         public List<string> Images { get; set; }
-
-        public static Emblem GetEmblemFromJSON(string json, bool foreground)
+        
+        public static void GetBackgroundsFromJSON(string json, Main main)
         {
-            EmblemRAW emblemRAW = JsonConvert.DeserializeObject<EmblemRAW>(json);
-            Emblem newEmblem = new Emblem
+            EmblemRAW[] rawEmblems = new EmblemRAW[1];
+            try
             {
-                ID = emblemRAW.id
-            };
-            for (int i = 0; i < emblemRAW.layers.Length; i++)
+                rawEmblems = JsonConvert.DeserializeObject<EmblemRAW[]>(json);
+            }
+            catch (Exception e)
             {
-                string fileName = string.Empty;
-                using (WebClient client = new WebClient())
+                rawEmblems[0] = JsonConvert.DeserializeObject<EmblemRAW>(json);
+            }
+            for (int a = 0; a < rawEmblems.Length; a++)
+            {
+                double cur = a, max = rawEmblems.Length;
+                EmblemRAW emblemRAW = rawEmblems[a];
+                main.JSON.Add(new KeyValuePair<string, string>("GuildEmblemBackground", JsonConvert.SerializeObject(emblemRAW)));
+                Emblem newEmblem = new Emblem
                 {
-                    fileName = emblemRAW.layers[i].Substring(emblemRAW.layers[i].LastIndexOf("/") + 1);
-                    Directory.CreateDirectory(AppDomain.CurrentDomain.BaseDirectory + @"images\emblems\" + ((foreground) ? @"foreground\" : @"background\"));
-                    if (!File.Exists(AppDomain.CurrentDomain.BaseDirectory + @"images\emblems\" + ((foreground) ? @"foreground\" : @"background\") + fileName)) client.DownloadFileAsync(new Uri(emblemRAW.layers[i]), AppDomain.CurrentDomain.BaseDirectory + @"images\emblems\" + ((foreground) ? @"foreground\" : @"background\") + fileName);
+                    ID = emblemRAW.id,
+                    Images = new List<string>()
+                };
+                for (int i = 0; i < emblemRAW.layers.Length; i++)
+                {
+                    string fileName = string.Empty;
+                    using (WebClient client = new WebClient())
+                    {
+                        fileName = emblemRAW.layers[i].Substring(emblemRAW.layers[i].LastIndexOf("/") + 1);
+                        Directory.CreateDirectory(AppDomain.CurrentDomain.BaseDirectory + @"images\emblems\background\");
+                        if (!File.Exists(AppDomain.CurrentDomain.BaseDirectory + @"images\emblems\background\" + fileName)) client.DownloadFileAsync(new Uri(emblemRAW.layers[i]), AppDomain.CurrentDomain.BaseDirectory + @"images\emblems\background\" + fileName);
+                    }
+
+                    newEmblem.Images.Add(AppDomain.CurrentDomain.BaseDirectory + @"images\emblems\background\" + fileName);
                 }
 
-                newEmblem.Images.Add(AppDomain.CurrentDomain.BaseDirectory + @"images\emblems\" + ((foreground) ? @"foreground\" : @"background\") + fileName);
+                main.GuildEmblemBackgrounds.Add(newEmblem);
+                main.OnCharStatusUpdate("Generated Emblem Background;" + newEmblem.ID + " " + ((cur != 0) ? Math.Round((double)(cur / max), 2) * 100 : 0).ToString() + "%");
             }
+        }
+        public static void GetForegroundsFromJSON(string json, Main main)
+        {
+            EmblemRAW[] rawEmblems = new EmblemRAW[1];
+            try
+            {
+                rawEmblems = JsonConvert.DeserializeObject<EmblemRAW[]>(json);
+            }
+            catch (Exception e)
+            {
+                rawEmblems[0] = JsonConvert.DeserializeObject<EmblemRAW>(json);
+            }
+            for (int a = 0; a < rawEmblems.Length; a++)
+            {
+                double cur = a, max = rawEmblems.Length;
+                EmblemRAW emblemRAW = rawEmblems[a];
+                main.JSON.Add(new KeyValuePair<string, string>("GuildEmblemForeground", JsonConvert.SerializeObject(emblemRAW)));
+                Emblem newEmblem = new Emblem
+                {
+                    ID = emblemRAW.id,
+                    Images = new List<string>()
+                };
+                for (int i = 0; i < emblemRAW.layers.Length; i++)
+                {
+                    string fileName = string.Empty;
+                    using (WebClient client = new WebClient())
+                    {
+                        fileName = emblemRAW.layers[i].Substring(emblemRAW.layers[i].LastIndexOf("/") + 1);
+                        Directory.CreateDirectory(AppDomain.CurrentDomain.BaseDirectory + @"images\emblems\foreground\");
+                        if (!File.Exists(AppDomain.CurrentDomain.BaseDirectory + @"images\emblems\foreground\" + fileName)) client.DownloadFileAsync(new Uri(emblemRAW.layers[i]), AppDomain.CurrentDomain.BaseDirectory + @"images\emblems\foreground\" + fileName);
+                    }
 
-            return newEmblem;
+                    newEmblem.Images.Add(AppDomain.CurrentDomain.BaseDirectory + @"images\emblems\foreground\" + fileName);
+                }
+
+                main.GuildEmblemForegrounds.Add(newEmblem);
+                main.OnCharStatusUpdate("Generated Emblem Foreground;" + newEmblem.ID + " " + ((cur != 0) ? Math.Round((double)(cur / max), 2) * 100 : 0).ToString() + "%");
+            }
         }
     }
 

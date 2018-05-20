@@ -5,6 +5,7 @@ using System.IO;
 using System.Linq;
 using System.Net;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace GW2Helper.Stuff
@@ -17,43 +18,45 @@ namespace GW2Helper.Stuff
         public string Image { get; set; }
         public int Order { get; set; }
         public Item UnlockItem { get; set; }
-
-        public static MiniPet GetMiniPetFromJSON(string json, Main main)
+        public int ItemID { get; set; }
+        
+        public static void GetMiniPetsFromJSON(string json, Main main)
         {
-            MiniPetRAW miniPetRAW = JsonConvert.DeserializeObject<MiniPetRAW>(json);
-            MiniPet newMiniPet = new MiniPet
+            MiniPetRAW[] rawMiniPets = new MiniPetRAW[1];
+            try
             {
-                ID = miniPetRAW.id,
-                Name = miniPetRAW.name,
-                Unlock = miniPetRAW.unlock,
-                Order = miniPetRAW.order
-            };
-
-            int itemID = miniPetRAW.item_id;
-
-            WebRequest request = WebRequest.Create("https://api.guildwars2.com/v2/items/" + itemID);
-            WebResponse response = request.GetResponse();
-            Stream data = response.GetResponseStream();
-
-            string html = string.Empty;
-            using (StreamReader sr = new StreamReader(data))
-            {
-                html = sr.ReadToEnd();
+                rawMiniPets = JsonConvert.DeserializeObject<MiniPetRAW[]>(json);
             }
-
-            Item item = (main.Items.Where(it => it.ID == itemID).ToArray().Length > 0) ? main.Items.FirstOrDefault(it => it.ID == itemID) : Item.GetItemFromJSON(html, main);
-            newMiniPet.UnlockItem = item;
-
-            string fileName = string.Empty;
-            using (WebClient client = new WebClient())
+            catch (Exception e)
             {
-                fileName = miniPetRAW.icon.Substring(miniPetRAW.icon.LastIndexOf("/") + 1);
-                Directory.CreateDirectory(AppDomain.CurrentDomain.BaseDirectory + @"images\minipets\");
-                if (!File.Exists(AppDomain.CurrentDomain.BaseDirectory + @"images\minipets\" + fileName)) client.DownloadFileAsync(new Uri(miniPetRAW.icon), AppDomain.CurrentDomain.BaseDirectory + @"images\minipets\" + fileName);
+                rawMiniPets[0] = JsonConvert.DeserializeObject<MiniPetRAW>(json);
             }
-            newMiniPet.Image = AppDomain.CurrentDomain.BaseDirectory + @"images\minipets\" + fileName;
+            for (int m = 0; m < rawMiniPets.Length; m++)
+            {
+                double cur = m, max = rawMiniPets.Length;
+                MiniPetRAW miniPetRAW = rawMiniPets[m];
+                main.JSON.Add(new KeyValuePair<string, string>("Minipet", JsonConvert.SerializeObject(miniPetRAW)));
+                MiniPet newMiniPet = new MiniPet
+                {
+                    ID = miniPetRAW.id,
+                    Name = miniPetRAW.name,
+                    Unlock = miniPetRAW.unlock,
+                    Order = miniPetRAW.order,
+                    ItemID = miniPetRAW.item_id
+                };
+                
+                string fileName = string.Empty;
+                using (WebClient client = new WebClient())
+                {
+                    fileName = miniPetRAW.icon.Substring(miniPetRAW.icon.LastIndexOf("/") + 1);
+                    Directory.CreateDirectory(AppDomain.CurrentDomain.BaseDirectory + @"images\minipets\");
+                    if (!File.Exists(AppDomain.CurrentDomain.BaseDirectory + @"images\minipets\" + fileName)) client.DownloadFileAsync(new Uri(miniPetRAW.icon), AppDomain.CurrentDomain.BaseDirectory + @"images\minipets\" + fileName);
+                }
+                newMiniPet.Image = AppDomain.CurrentDomain.BaseDirectory + @"images\minipets\" + fileName;
 
-            return newMiniPet;
+                main.Minis.Add(newMiniPet);
+                main.OnCharStatusUpdate("Generated Minipet " + newMiniPet.Name + ";" + newMiniPet.ID + " " + ((cur != 0) ? Math.Round((double)(cur / max), 2) * 100 : 0).ToString() + "%");
+            }
         }
     }
 
