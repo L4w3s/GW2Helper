@@ -264,6 +264,19 @@ namespace GW2Helper.Stuff
                     }
                     main.Items[i].Details = detail;
                 }
+                if (main.Items[i].ItemType == Item.Type.UpgradeComponent)
+                {
+                    UpgradeItemDetail detail = (UpgradeItemDetail)main.Items[i].Details;
+                    if (detail.InfixUpgrades != null)
+                    {
+                        if (detail.InfixUpgrades.Buff != null)
+                        {
+                            int skillID = detail.InfixUpgrades.Buff.SkillID.Value;
+                            detail.InfixUpgrades.Buff.BuffSkill = main.Skills.FirstOrDefault(sk => sk.ID == skillID);
+                        }
+                    }
+                    main.Items[i].Details = detail;
+                }
                 if (main.Items[i].ItemType == Item.Type.Weapon)
                 {
                     WeaponItemDetail detail = (WeaponItemDetail)main.Items[i].Details;

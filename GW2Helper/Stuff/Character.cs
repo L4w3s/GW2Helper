@@ -55,14 +55,17 @@ namespace GW2Helper.Stuff
         public EquipmentContainer Equips { get; set; }
         public List<string> Heropoints { get; set; }
         public Inventory Inv { get; set; }
-        public List<Skill> Skills { get; set; }
+        public Bank AccountBank { get; set; }
+        public List<Skill> PVESkills { get; set; }
+        public List<Skill> PVPSkills { get; set; }
+        public List<Skill> WVWSkills { get; set; }
         public List<Specialization> Specializations { get; set; }
         public List<string> WVWAbilities { get; set; }
         public List<Equipment> PVPEquips { get; set; }
         public List<Recipe> Recipes { get; set; }
         public List<Training> TrainingStats { get; set; }
 
-        public static Character GetCharacterFromJSON(string json, Main main)
+        public static Character GetCharacterFromJSON(string json, Main main, string apiToken)
         {
             CharacterRAW charRAW = JsonConvert.DeserializeObject<CharacterRAW>(json);
             Character newChar = new Character
@@ -77,8 +80,24 @@ namespace GW2Helper.Stuff
                 Age = charRAW.age,
                 CreationDate = DateTime.Parse(charRAW.created),
                 Deaths = charRAW.deaths,
-                Inv = new Inventory()
+                Inv = new Inventory(),
+                PVESkills = new List<Skill>(),
+                PVPSkills = new List<Skill>(),
+                WVWSkills = new List<Skill>(),
+                Equips = new EquipmentContainer()
             };
+
+            WebRequest request = WebRequest.Create("https://api.guildwars2.com/v2/account/bank" + "?access_token=" + apiToken);
+            WebResponse response = request.GetResponse();
+            Stream data = response.GetResponseStream();
+
+            string html = string.Empty;
+            using (StreamReader sr = new StreamReader(data))
+            {
+                html = sr.ReadToEnd();
+            }
+
+            BagSubRAW[] rawBank = JsonConvert.DeserializeObject<BagSubRAW[]>(html);
 
             for (int i = 0; i < charRAW.backstory.Length; i++)
             {
@@ -92,11 +111,11 @@ namespace GW2Helper.Stuff
             {
                 string guildID = charRAW.guild;
 
-                WebRequest request = WebRequest.Create("https://api.guildwars2.com/v2/guild/" + guildID);
-                WebResponse response = request.GetResponse();
-                Stream data = response.GetResponseStream();
+                request = WebRequest.Create("https://api.guildwars2.com/v2/guild/" + guildID);
+                response = request.GetResponse();
+                data = response.GetResponseStream();
 
-                string html = null;
+                html = null;
                 using (StreamReader sr = new StreamReader(data))
                 {
                     html = sr.ReadToEnd();
@@ -203,6 +222,244 @@ namespace GW2Helper.Stuff
                 }
             }
 
+            if (rawBank != null)
+            {
+                if (rawBank.Length > 0)
+                {
+                    newChar.AccountBank = new Bank
+                    {
+                        Items = new List<ItemStack>()
+                    };
+
+                    for (int i = 0; i < rawBank.Length; i++)
+                    {
+                        if (rawBank[i] != null)
+                        {
+                            ItemStack itemStack = new ItemStack
+                            {
+                                Count = rawBank[i].count,
+                                Infusions = new List<Item>(),
+                                Upgrades = new List<Item>()
+                            };
+                            if (rawBank[i].binding != null)
+                            {
+                                itemStack.ItemBinding = (ItemStack.Binding)Enum.Parse(typeof(ItemStack.Binding), rawBank[i].binding);
+                                itemStack.BoundTo = rawBank[i].bound_to;
+                            }
+
+                            int itemID = rawBank[i].id;
+                            Item newItem = main.Items.FirstOrDefault(it => it.ID == itemID);
+                            itemStack.Item = newItem;
+
+                            if (rawBank[i].skin.HasValue)
+                            {
+                                int skinID = rawBank[i].skin.Value;
+                                Skin newSkin = main.Skins.FirstOrDefault(sk => sk.ID == skinID);
+                                itemStack.Skin = newSkin;
+                            }
+
+                            if (rawBank[i].infusions != null)
+                            {
+                                for (int k = 0; k < rawBank[i].infusions.Length; k++)
+                                {
+                                    itemID = rawBank[i].infusions[k].Value;
+                                    Item infusionItem = main.Items.FirstOrDefault(it => it.ID == itemID);
+                                    itemStack.Infusions.Add(infusionItem);
+                                }
+                            }
+                            if (rawBank[i].upgrades != null)
+                            {
+                                for (int k = 0; k < rawBank[i].upgrades.Length; k++)
+                                {
+                                    itemID = rawBank[i].upgrades[k].Value;
+                                    Item upgradeItem = main.Items.FirstOrDefault(it => it.ID == itemID);
+                                    itemStack.Upgrades.Add(upgradeItem);
+                                }
+                            }
+
+                            if (rawBank[i].stats != null)
+                            {
+                                ItemStat itemStat = main.ItemStats.FirstOrDefault(it => it.ID == rawBank[i].stats.id);
+                                ItemStackAttribute itemStackAttribute = new ItemStackAttribute
+                                {
+                                    Power = (rawBank[i].stats.attributes.Power.HasValue) ? rawBank[i].stats.attributes.Power.Value : 0,
+                                    Precision = (rawBank[i].stats.attributes.Precision.HasValue) ? rawBank[i].stats.attributes.Precision.Value : 0,
+                                    Toughness = (rawBank[i].stats.attributes.Toughness.HasValue) ? rawBank[i].stats.attributes.Toughness.Value : 0,
+                                    Vitality = (rawBank[i].stats.attributes.Vitality.HasValue) ? rawBank[i].stats.attributes.Vitality.Value : 0,
+                                    ConditionDamage = (rawBank[i].stats.attributes.ConditionDamage.HasValue) ? rawBank[i].stats.attributes.ConditionDamage.Value : 0,
+                                    ConditionDuration = (rawBank[i].stats.attributes.ConditionDuration.HasValue) ? rawBank[i].stats.attributes.ConditionDuration.Value : 0,
+                                    Healing = (rawBank[i].stats.attributes.Healing.HasValue) ? rawBank[i].stats.attributes.Healing.Value : 0,
+                                    BoonDuration = (rawBank[i].stats.attributes.BoonDuration.HasValue) ? rawBank[i].stats.attributes.BoonDuration.Value : 0
+                                };
+                                ItemStackStat itemStackStat = new ItemStackStat
+                                {
+                                    Stat = itemStat,
+                                    Attributes = itemStackAttribute
+                                };
+                                itemStack.Stats = itemStackStat;
+                            }
+
+                            newChar.AccountBank.Items.Add(itemStack);
+                        }
+                    }
+                }
+            }
+
+            if (charRAW.skills != null)
+            {
+                if (charRAW.skills.pve != null)
+                {
+                    if (charRAW.skills.pve.heal.HasValue)
+                    {
+                        int skillID = charRAW.skills.pve.heal.Value;
+                        Skill skill = main.Skills.FirstOrDefault(sk => sk.ID == skillID);
+                        newChar.PVESkills.Add(skill);
+                    }
+                    if (charRAW.skills.pve.utilities != null)
+                    {
+                        for (int i = 0; i < charRAW.skills.pve.utilities.Length; i++)
+                        {
+                            if (charRAW.skills.pve.utilities[i].HasValue)
+                            {
+                                int skillID = charRAW.skills.pve.utilities[i].Value;
+                                Skill skill = main.Skills.FirstOrDefault(sk => sk.ID == skillID);
+                                newChar.PVESkills.Add(skill);
+                            }
+                        }
+                    }
+                    if (charRAW.skills.pve.elite.HasValue)
+                    {
+                        int skillID = charRAW.skills.pve.elite.Value;
+                        Skill skill = main.Skills.FirstOrDefault(sk => sk.ID == skillID);
+                        newChar.PVESkills.Add(skill);
+                    }
+                }
+                if (charRAW.skills.pvp != null)
+                {
+                    if (charRAW.skills.pvp.heal.HasValue)
+                    {
+                        int skillID = charRAW.skills.pvp.heal.Value;
+                        Skill skill = main.Skills.FirstOrDefault(sk => sk.ID == skillID);
+                        newChar.PVPSkills.Add(skill);
+                    }
+                    if (charRAW.skills.pvp.utilities != null)
+                    {
+                        for (int i = 0; i < charRAW.skills.pvp.utilities.Length; i++)
+                        {
+                            if (charRAW.skills.pvp.utilities[i].HasValue)
+                            {
+                                int skillID = charRAW.skills.pvp.utilities[i].Value;
+                                Skill skill = main.Skills.FirstOrDefault(sk => sk.ID == skillID);
+                                newChar.PVPSkills.Add(skill);
+                            }
+                        }
+                    }
+                    if (charRAW.skills.pvp.elite.HasValue)
+                    {
+                        int skillID = charRAW.skills.pvp.elite.Value;
+                        Skill skill = main.Skills.FirstOrDefault(sk => sk.ID == skillID);
+                        newChar.PVPSkills.Add(skill);
+                    }
+                }
+                if (charRAW.skills.wvw != null)
+                {
+                    if (charRAW.skills.wvw.heal.HasValue)
+                    {
+                        int skillID = charRAW.skills.wvw.heal.Value;
+                        Skill skill = main.Skills.FirstOrDefault(sk => sk.ID == skillID);
+                        newChar.WVWSkills.Add(skill);
+                    }
+                    if (charRAW.skills.wvw.utilities != null)
+                    {
+                        for (int i = 0; i < charRAW.skills.wvw.utilities.Length; i++)
+                        {
+                            if (charRAW.skills.wvw.utilities[i].HasValue)
+                            {
+                                int skillID = charRAW.skills.wvw.utilities[i].Value;
+                                Skill skill = main.Skills.FirstOrDefault(sk => sk.ID == skillID);
+                                newChar.WVWSkills.Add(skill);
+                            }
+                        }
+                    }
+                    if (charRAW.skills.wvw.elite.HasValue)
+                    {
+                        int skillID = charRAW.skills.wvw.elite.Value;
+                        Skill skill = main.Skills.FirstOrDefault(sk => sk.ID == skillID);
+                        newChar.WVWSkills.Add(skill);
+                    }
+                }
+
+                if (charRAW.equipment != null)
+                {
+                    newChar.Equips.Equips = new List<Equipment>();
+
+                    for (int i = 0; i < charRAW.equipment.Length; i++)
+                    {
+                        if (charRAW.equipment[i] != null)
+                        {
+                            Equipment newEquipment = new Equipment
+                            {
+                                ID = charRAW.equipment[i].id,
+                                EquipSlot = (Equipment.Slot)Enum.Parse(typeof(Equipment.Slot), charRAW.equipment[i].slot),
+                                Dyes = new List<Dye>(),
+                                Infusions = new List<Item>(),
+                                Upgrades = new List<Item>()
+                            };
+                            Item equippedItem = main.Items.FirstOrDefault(it => it.ID == newEquipment.ID);
+                            newEquipment.EquippedItem = equippedItem;
+
+                            if (charRAW.equipment[i].charges.HasValue) newEquipment.Charges = charRAW.equipment[i].charges.Value;
+                            if (!string.IsNullOrEmpty(charRAW.equipment[i].binding))
+                            {
+                                newEquipment.ItemBind = (Equipment.Binding)Enum.Parse(typeof(Equipment.Binding), charRAW.equipment[i].binding);
+                                if (!string.IsNullOrEmpty(charRAW.equipment[i].bound_to)) newEquipment.CharacterBound = charRAW.equipment[i].bound_to;
+                            }
+                            if (charRAW.equipment[i].upgrades != null)
+                            {
+                                for (int a = 0; a < charRAW.equipment[i].upgrades.Length; a++)
+                                {
+                                    if (charRAW.equipment[i].upgrades[a].HasValue)
+                                    {
+                                        int itemID = charRAW.equipment[i].upgrades[a].Value;
+                                        Item item = main.Items.FirstOrDefault(it => it.ID == itemID);
+                                        newEquipment.Upgrades.Add(item);
+                                    }
+                                }
+                            }
+                            if (charRAW.equipment[i].infusions != null)
+                            {
+                                for (int a = 0; a < charRAW.equipment[i].infusions.Length; a++)
+                                {
+                                    if (charRAW.equipment[i].infusions[a].HasValue)
+                                    {
+                                        int itemID = charRAW.equipment[i].infusions[a].Value;
+                                        Item item = main.Items.FirstOrDefault(it => it.ID == itemID);
+                                        newEquipment.Infusions.Add(item);
+                                    }
+                                }
+                            }
+                            if (charRAW.equipment[i].skin.HasValue)
+                            {
+                                int skinID = charRAW.equipment[i].skin.Value;
+                                Skin skin = main.Skins.FirstOrDefault(sk => sk.ID == skinID);
+                                newEquipment.ItemSkin = skin;
+                            }
+                            if (charRAW.equipment[i].stats != null)
+                            {
+                                if (charRAW.equipment[i].stats.id.HasValue)
+                                {
+                                    int itemStatID = charRAW.equipment[i].stats.id.Value;
+                                    ItemStat itemStat = main.ItemStats.FirstOrDefault(it => it.ID == itemStatID);
+                                    newEquipment.Stat = itemStat;
+                                }
+                            }
+
+                            newChar.Equips.Equips.Add(newEquipment);
+                        }
+                    }
+                }
+            }
+
             main.OnCharStatusUpdate("Generated Character " + newChar.Name);
             return newChar;
         }
@@ -266,7 +523,7 @@ namespace GW2Helper.Stuff
     }
     class SkillSubRAW
     {
-        public int heal { get; set; }
+        public int? heal { get; set; }
         public int?[] utilities { get; set; }
         public int? elite { get; set; }
         public string[] legends { get; set; }
@@ -286,7 +543,7 @@ namespace GW2Helper.Stuff
     }
     class EquipmentSub1RAW
     {
-        public int id { get; set; }
+        public int? id { get; set; }
         public EquipmentSub2RAW attributes { get; set; }
     }
     class EquipmentSub2RAW

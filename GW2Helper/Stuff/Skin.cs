@@ -333,9 +333,10 @@ namespace GW2Helper.Stuff
                     using (WebClient client = new WebClient())
                     {
                         fileName = skinRAW.icon.Substring(skinRAW.icon.LastIndexOf("/") + 1);
-                        if (!File.Exists(AppDomain.CurrentDomain.BaseDirectory + @"\images\skins\" + fileName)) client.DownloadFileAsync(new Uri(skinRAW.icon), AppDomain.CurrentDomain.BaseDirectory + @"\images\skins\" + fileName);
+                        Directory.CreateDirectory(AppDomain.CurrentDomain.BaseDirectory + @"images\skins\");
+                        if (!File.Exists(AppDomain.CurrentDomain.BaseDirectory + @"images\skins\" + fileName)) client.DownloadFileAsync(new Uri(skinRAW.icon), AppDomain.CurrentDomain.BaseDirectory + @"images\skins\" + fileName);
                     }
-                    newSkin.Image = AppDomain.CurrentDomain.BaseDirectory + @"\images\skins\" + fileName;
+                    newSkin.Image = AppDomain.CurrentDomain.BaseDirectory + @"images\skins\" + fileName;
                 }
 
                 main.Skins.Add(newSkin);

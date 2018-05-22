@@ -18,6 +18,7 @@ using System.Windows.Shapes;
 using System.Windows.Threading;
 using DevExpress.Xpf.Core;
 using GW2Helper.Stuff;
+using GW2Helper.Stuff.CharacterStuff.Equipment;
 using Newtonsoft.Json;
 
 namespace GW2Helper
@@ -77,7 +78,11 @@ namespace GW2Helper
             inv_1.Items.Clear();
             inv_2.Items.Clear();
             inv_3.Items.Clear();
-            
+            bank.Items.Clear();
+            skill_pve.Items.Clear();
+            skill_pvp.Items.Clear();
+            skill_wvw.Items.Clear();
+
             timer1 = new DispatcherTimer();
             timer1.Interval = TimeSpan.FromMinutes(5);
             timer1.Tick += new EventHandler(timer_Tick1);
@@ -138,7 +143,7 @@ namespace GW2Helper
                 html = sr.ReadToEnd();
             }
 
-            return Character.GetCharacterFromJSON(html, Global);
+            return Character.GetCharacterFromJSON(html, Global, apiToken);
         }
         public void LoadCharacters(string apiToken)
         {
@@ -155,10 +160,17 @@ namespace GW2Helper
             Global.SavedCharacters.Clear();
             List<string> characters = JsonConvert.DeserializeObject<List<string>>(html);
             List<CharacterListObject> characterList = new List<CharacterListObject>();
+            if (!chk_replacecharlist.IsChecked.Value)
+            {
+                characterList = lst_characters.Items.OfType<CharacterListObject>().ToList();
+            }
             for (int i = 0; i < characters.Count; i++)
             {
                 characterList.Add(new CharacterListObject { CharacterName = characters[i], APIToken = apiToken });
-                Global.SavedCharacters.Add(new CharacterListObject { CharacterName = characters[i], APIToken = apiToken });
+            }
+            for (int i = 0; i < characterList.Count; i++)
+            {
+                Global.SavedCharacters.Add(characterList[i]);
             }
             Dispatcher.Invoke(() =>
             {
@@ -741,6 +753,18 @@ namespace GW2Helper
             lastCharacterRefresh = DateTime.Now;
             nextCharacterRefresh = DateTime.Now.AddMinutes(5);
 
+            TimeSpan time = DateTime.Now - character.CreationDate;
+            int TotalMonths = (int)Math.Floor(time.TotalDays / 28.0);
+            bool months = (TotalMonths > 0) ? true : false;
+            int TotalWeeks = (int)Math.Floor(time.TotalDays / 7.0);
+            bool weeks = (months) ? true : ((TotalWeeks > 0) ? true : false);
+            bool days = (weeks) ? true : ((time.TotalDays >= 1.0) ? true : false);
+            bool hours = (days) ? true : ((time.TotalHours >= 1.0) ? true : false);
+            bool minutes = (hours) ? true : ((time.TotalMinutes >= 1.0) ? true : false);
+
+            int Weeks = TotalWeeks - (TotalMonths * 4);
+            int Days = time.Days - (TotalWeeks * 7);
+
             Dispatcher.Invoke(() =>
             {
                 journal_name.Content = character.Name;
@@ -754,6 +778,234 @@ namespace GW2Helper
                 else inv_2.ItemsSource = null;
                 if (character.Inv.Bags.Count > 2) inv_3.ItemsSource = character.Inv.Bags[2].Contents;
                 else inv_3.ItemsSource = null;
+
+                if (character.PVESkills.Count > 0) skill_pve.ItemsSource = character.PVESkills;
+                else skill_pve.ItemsSource = null;
+                if (character.PVPSkills.Count > 0) skill_pvp.ItemsSource = character.PVPSkills;
+                else skill_pvp.ItemsSource = null;
+                if (character.WVWSkills.Count > 0) skill_wvw.ItemsSource = character.WVWSkills;
+                else skill_wvw.ItemsSource = null;
+
+                if (character.AccountBank.Items.Count > 0) bank.ItemsSource = character.AccountBank.Items;
+                else bank.ItemsSource = null;
+
+                equipment_head.Visibility = Visibility.Collapsed;
+                equipment_head_upgrade1.Visibility = Visibility.Collapsed;
+                equipment_head_upgrade2.Visibility = Visibility.Collapsed;
+                equipment_shoulders.Visibility = Visibility.Collapsed;
+                equipment_shoulders_upgrade1.Visibility = Visibility.Collapsed;
+                equipment_shoulders_upgrade2.Visibility = Visibility.Collapsed;
+                equipment_chest.Visibility = Visibility.Collapsed;
+                equipment_chest_upgrade1.Visibility = Visibility.Collapsed;
+                equipment_chest_upgrade2.Visibility = Visibility.Collapsed;
+                equipment_gloves.Visibility = Visibility.Collapsed;
+                equipment_gloves_upgrade1.Visibility = Visibility.Collapsed;
+                equipment_gloves_upgrade2.Visibility = Visibility.Collapsed;
+                equipment_leggings.Visibility = Visibility.Collapsed;
+                equipment_leggings_upgrade1.Visibility = Visibility.Collapsed;
+                equipment_leggings_upgrade2.Visibility = Visibility.Collapsed;
+                equipment_boots.Visibility = Visibility.Collapsed;
+                equipment_boots_upgrade1.Visibility = Visibility.Collapsed;
+                equipment_boots_upgrade2.Visibility = Visibility.Collapsed;
+                equipment_weapona1.Visibility = Visibility.Collapsed;
+                equipment_weapona1_upgrade1.Visibility = Visibility.Collapsed;
+                equipment_weapona1_upgrade2.Visibility = Visibility.Collapsed;
+                equipment_weapona2.Visibility = Visibility.Collapsed;
+                equipment_weapona2_upgrade1.Visibility = Visibility.Collapsed;
+                equipment_weapona2_upgrade2.Visibility = Visibility.Collapsed;
+                equipment_weaponb1.Visibility = Visibility.Collapsed;
+                equipment_weaponb1_upgrade1.Visibility = Visibility.Collapsed;
+                equipment_weaponb1_upgrade2.Visibility = Visibility.Collapsed;
+                equipment_weaponb2.Visibility = Visibility.Collapsed;
+                equipment_weaponb2_upgrade1.Visibility = Visibility.Collapsed;
+                equipment_weaponb2_upgrade2.Visibility = Visibility.Collapsed;
+
+                for (int i = 0; i < character.Equips.Equips.Count; i++)
+                {
+                    Equipment equipment = character.Equips.Equips[i];
+                    switch (equipment.EquipSlot)
+                    {
+                        case Equipment.Slot.Helm:
+                            equipment_head.Visibility = Visibility.Visible;
+                            equipment_head.Tag = equipment.ID;
+                            equipment_head_image.Source = new BitmapImage(new Uri(equipment.EquippedItem.Image));
+                            if (equipment.Upgrades.Count > 0)
+                            {
+                                equipment_head_upgrade1.Visibility = Visibility.Visible;
+                                equipment_head_upgrade1.Tag = equipment.Upgrades[0].ID;
+                                equipment_head_upgrade1_image.Source = new BitmapImage(new Uri(equipment.Upgrades[0].Image));
+                            }
+                            if (equipment.Upgrades.Count > 1)
+                            {
+                                equipment_head_upgrade2.Visibility = Visibility.Visible;
+                                equipment_head_upgrade2.Tag = equipment.Upgrades[1].ID;
+                                equipment_head_upgrade2_image.Source = new BitmapImage(new Uri(equipment.Upgrades[1].Image));
+                            }
+                            continue;
+                        case Equipment.Slot.Shoulders:
+                            equipment_shoulders.Visibility = Visibility.Visible;
+                            equipment_shoulders.Tag = equipment.ID;
+                            equipment_shoulders_image.Source = new BitmapImage(new Uri(equipment.EquippedItem.Image));
+                            if (equipment.Upgrades.Count > 0)
+                            {
+                                equipment_shoulders_upgrade1.Visibility = Visibility.Visible;
+                                equipment_shoulders_upgrade1.Tag = equipment.Upgrades[0].ID;
+                                equipment_shoulders_upgrade1_image.Source = new BitmapImage(new Uri(equipment.Upgrades[0].Image));
+                            }
+                            if (equipment.Upgrades.Count > 1)
+                            {
+                                equipment_shoulders_upgrade2.Visibility = Visibility.Visible;
+                                equipment_shoulders_upgrade2.Tag = equipment.Upgrades[1].ID;
+                                equipment_shoulders_upgrade2_image.Source = new BitmapImage(new Uri(equipment.Upgrades[1].Image));
+                            }
+                            continue;
+                        case Equipment.Slot.Coat:
+                            equipment_chest.Visibility = Visibility.Visible;
+                            equipment_chest.Tag = equipment.ID;
+                            equipment_chest_image.Source = new BitmapImage(new Uri(equipment.EquippedItem.Image));
+                            if (equipment.Upgrades.Count > 0)
+                            {
+                                equipment_chest_upgrade1.Visibility = Visibility.Visible;
+                                equipment_chest_upgrade1.Tag = equipment.Upgrades[0].ID;
+                                equipment_chest_upgrade1_image.Source = new BitmapImage(new Uri(equipment.Upgrades[0].Image));
+                            }
+                            if (equipment.Upgrades.Count > 1)
+                            {
+                                equipment_chest_upgrade2.Visibility = Visibility.Visible;
+                                equipment_chest_upgrade2.Tag = equipment.Upgrades[1].ID;
+                                equipment_chest_upgrade2_image.Source = new BitmapImage(new Uri(equipment.Upgrades[1].Image));
+                            }
+                            continue;
+                        case Equipment.Slot.Gloves:
+                            equipment_gloves.Visibility = Visibility.Visible;
+                            equipment_gloves.Tag = equipment.ID;
+                            equipment_gloves_image.Source = new BitmapImage(new Uri(equipment.EquippedItem.Image));
+                            if (equipment.Upgrades.Count > 0)
+                            {
+                                equipment_gloves_upgrade1.Visibility = Visibility.Visible;
+                                equipment_gloves_upgrade1.Tag = equipment.Upgrades[0].ID;
+                                equipment_gloves_upgrade1_image.Source = new BitmapImage(new Uri(equipment.Upgrades[0].Image));
+                            }
+                            if (equipment.Upgrades.Count > 1)
+                            {
+                                equipment_gloves_upgrade2.Visibility = Visibility.Visible;
+                                equipment_gloves_upgrade2.Tag = equipment.Upgrades[1].ID;
+                                equipment_gloves_upgrade2_image.Source = new BitmapImage(new Uri(equipment.Upgrades[1].Image));
+                            }
+                            continue;
+                        case Equipment.Slot.Leggings:
+                            equipment_leggings.Visibility = Visibility.Visible;
+                            equipment_leggings.Tag = equipment.ID;
+                            equipment_leggings_image.Source = new BitmapImage(new Uri(equipment.EquippedItem.Image));
+                            if (equipment.Upgrades.Count > 0)
+                            {
+                                equipment_leggings_upgrade1.Visibility = Visibility.Visible;
+                                equipment_leggings_upgrade1.Tag = equipment.Upgrades[0].ID;
+                                equipment_leggings_upgrade1_image.Source = new BitmapImage(new Uri(equipment.Upgrades[0].Image));
+                            }
+                            if (equipment.Upgrades.Count > 1)
+                            {
+                                equipment_leggings_upgrade2.Visibility = Visibility.Visible;
+                                equipment_leggings_upgrade2.Tag = equipment.Upgrades[1].ID;
+                                equipment_leggings_upgrade2_image.Source = new BitmapImage(new Uri(equipment.Upgrades[1].Image));
+                            }
+                            continue;
+                        case Equipment.Slot.Boots:
+                            equipment_boots.Visibility = Visibility.Visible;
+                            equipment_boots.Tag = equipment.ID;
+                            equipment_boots_image.Source = new BitmapImage(new Uri(equipment.EquippedItem.Image));
+                            if (equipment.Upgrades.Count > 0)
+                            {
+                                equipment_boots_upgrade1.Visibility = Visibility.Visible;
+                                equipment_boots_upgrade1.Tag = equipment.Upgrades[0].ID;
+                                equipment_boots_upgrade1_image.Source = new BitmapImage(new Uri(equipment.Upgrades[0].Image));
+                            }
+                            if (equipment.Upgrades.Count > 1)
+                            {
+                                equipment_boots_upgrade2.Visibility = Visibility.Visible;
+                                equipment_boots_upgrade2.Tag = equipment.Upgrades[1].ID;
+                                equipment_boots_upgrade2_image.Source = new BitmapImage(new Uri(equipment.Upgrades[1].Image));
+                            }
+                            continue;
+                        case Equipment.Slot.WeaponA1:
+                            equipment_weapona1.Visibility = Visibility.Visible;
+                            equipment_weapona1.Tag = equipment.ID;
+                            equipment_weapona1_image.Source = new BitmapImage(new Uri(equipment.EquippedItem.Image));
+                            if (equipment.Upgrades.Count > 0)
+                            {
+                                equipment_weapona1_upgrade1.Visibility = Visibility.Visible;
+                                equipment_weapona1_upgrade1.Tag = equipment.Upgrades[0].ID;
+                                equipment_weapona1_upgrade1_image.Source = new BitmapImage(new Uri(equipment.Upgrades[0].Image));
+                            }
+                            if (equipment.Upgrades.Count > 1)
+                            {
+                                equipment_weapona1_upgrade2.Visibility = Visibility.Visible;
+                                equipment_weapona1_upgrade2.Tag = equipment.Upgrades[1].ID;
+                                equipment_weapona1_upgrade2_image.Source = new BitmapImage(new Uri(equipment.Upgrades[1].Image));
+                            }
+                            continue;
+                        case Equipment.Slot.WeaponA2:
+                            equipment_weapona2.Visibility = Visibility.Visible;
+                            equipment_weapona2.Tag = equipment.ID;
+                            equipment_weapona2_image.Source = new BitmapImage(new Uri(equipment.EquippedItem.Image));
+                            if (equipment.Upgrades.Count > 0)
+                            {
+                                equipment_weapona2_upgrade1.Visibility = Visibility.Visible;
+                                equipment_weapona2_upgrade1.Tag = equipment.Upgrades[0].ID;
+                                equipment_weapona2_upgrade1_image.Source = new BitmapImage(new Uri(equipment.Upgrades[0].Image));
+                            }
+                            if (equipment.Upgrades.Count > 1)
+                            {
+                                equipment_weapona2_upgrade2.Visibility = Visibility.Visible;
+                                equipment_weapona2_upgrade2.Tag = equipment.Upgrades[1].ID;
+                                equipment_weapona2_upgrade2_image.Source = new BitmapImage(new Uri(equipment.Upgrades[1].Image));
+                            }
+                            continue;
+                        case Equipment.Slot.WeaponB1:
+                            equipment_weaponb1.Visibility = Visibility.Visible;
+                            equipment_weaponb1.Tag = equipment.ID;
+                            equipment_weaponb1_image.Source = new BitmapImage(new Uri(equipment.EquippedItem.Image));
+                            if (equipment.Upgrades.Count > 0)
+                            {
+                                equipment_weaponb1_upgrade1.Visibility = Visibility.Visible;
+                                equipment_weaponb1_upgrade1.Tag = equipment.Upgrades[0].ID;
+                                equipment_weaponb1_upgrade1_image.Source = new BitmapImage(new Uri(equipment.Upgrades[0].Image));
+                            }
+                            if (equipment.Upgrades.Count > 1)
+                            {
+                                equipment_weaponb1_upgrade2.Visibility = Visibility.Visible;
+                                equipment_weaponb1_upgrade2.Tag = equipment.Upgrades[1].ID;
+                                equipment_weaponb1_upgrade2_image.Source = new BitmapImage(new Uri(equipment.Upgrades[1].Image));
+                            }
+                            continue;
+                        case Equipment.Slot.WeaponB2:
+                            equipment_weaponb2.Visibility = Visibility.Visible;
+                            equipment_weaponb2.Tag = equipment.ID;
+                            equipment_weaponb2_image.Source = new BitmapImage(new Uri(equipment.EquippedItem.Image));
+                            if (equipment.Upgrades.Count > 0)
+                            {
+                                equipment_weaponb2_upgrade1.Visibility = Visibility.Visible;
+                                equipment_weaponb2_upgrade1.Tag = equipment.Upgrades[0].ID;
+                                equipment_weaponb2_upgrade1_image.Source = new BitmapImage(new Uri(equipment.Upgrades[0].Image));
+                            }
+                            if (equipment.Upgrades.Count > 1)
+                            {
+                                equipment_weaponb2_upgrade2.Visibility = Visibility.Visible;
+                                equipment_weaponb2_upgrade2.Tag = equipment.Upgrades[1].ID;
+                                equipment_weaponb2_upgrade2_image.Source = new BitmapImage(new Uri(equipment.Upgrades[1].Image));
+                            }
+                            continue;
+                    }
+                }
+
+                char_race.Content = character.CharRace.ToString();
+                char_gender.Content = character.CharGender.ToString();
+                char_profession.Content = character.CharProfession.ToString();
+                if (character.CharTitle != null) char_title.Content = character.CharTitle.Name;
+                else char_title.Content = "";
+                char_level.Content = character.Level;
+                char_deaths.Content = character.Deaths;
+                char_age.Content = ((months) ? TotalMonths.ToString("D2") + "M:" : "") + ((weeks) ? Weeks.ToString("D2") + "w:" : "") + ((days) ? Days.ToString("D2") + "d:" : "") + ((hours) ? time.Hours.ToString("D2") + "h:" : "") + ((minutes) ? time.Minutes.ToString("D2") + "m:" : "") + time.Seconds.ToString("D2") + "s";
 
                 lbl_loaddetails.Content = "Ready for Loading!";
                 lbl_loadid.Content = "";
@@ -770,23 +1022,55 @@ namespace GW2Helper
             }
         }
         
-        private void inv_item_MouseEnter(object sender, MouseEventArgs e)
+        private void item_MouseEnter(object sender, MouseEventArgs e)
         {
             tooltip.Visibility = Visibility.Visible;
             int id = int.Parse(((Grid)sender).Tag.ToString());
             Item item = Global.Items.FirstOrDefault(it => it.ID == id);
+            string desc = item.Description;
+            if (item.ItemType == Item.Type.UpgradeComponent)
+            {
+                if (item.Details != null) if (((UpgradeItemDetail)item.Details).InfixUpgrades != null) if (((UpgradeItemDetail)item.Details).InfixUpgrades.Buff != null) desc = ((UpgradeItemDetail)item.Details).InfixUpgrades.Buff.Description;
+            }
+            if (character.Equips.Equips.Where(eq => eq.EquippedItem.ID == id).ToArray().Length > 0) desc += ((!string.IsNullOrEmpty(desc)) ? Environment.NewLine + Environment.NewLine : "") + "Currently equipped in the " + character.Equips.Equips.FirstOrDefault(eq => eq.EquippedItem.ID == id).EquipSlot.ToString() + " slot.";
+
             tooltip_image.Source = new BitmapImage(new Uri(item.Image));
             tooltip_name.Content = item.Name;
             tooltip_type.Content = item.ItemType.ToString();
-            tooltip_description.Text = item.Description;
+            tooltip_description.Text = desc;
         }
 
-        private void inv_item_MouseLeave(object sender, MouseEventArgs e)
+        private void item_MouseLeave(object sender, MouseEventArgs e)
         {
             tooltip.Visibility = Visibility.Collapsed;
         }
 
-        private void inv_item_MouseMove(object sender, MouseEventArgs e)
+        private void item_MouseMove(object sender, MouseEventArgs e)
+        {
+            if (tooltip.Visibility == Visibility.Visible)
+            {
+                Point point = Mouse.GetPosition(this);
+                double x = point.X += 5, y = point.Y -= 25;
+                tooltip.Margin = new Thickness(x, y, 0, 0);
+            }
+        }
+        private void skill_MouseEnter(object sender, MouseEventArgs e)
+        {
+            tooltip.Visibility = Visibility.Visible;
+            int id = int.Parse(((Grid)sender).Tag.ToString());
+            Skill skill = Global.Skills.FirstOrDefault(sk => sk.ID == id);
+            tooltip_image.Source = new BitmapImage(new Uri(skill.Image));
+            tooltip_name.Content = skill.Name;
+            tooltip_type.Content = "";
+            tooltip_description.Text = skill.Description;
+        }
+
+        private void skill_MouseLeave(object sender, MouseEventArgs e)
+        {
+            tooltip.Visibility = Visibility.Collapsed;
+        }
+
+        private void skill_MouseMove(object sender, MouseEventArgs e)
         {
             if (tooltip.Visibility == Visibility.Visible)
             {

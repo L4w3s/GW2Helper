@@ -507,6 +507,37 @@ namespace GW2Helper.Stuff
                             newItemDetail.Infusions.Add((UpgradeItemDetail.InfusionFlag)Enum.Parse(typeof(UpgradeItemDetail.InfusionFlag), itemRAW.details.infusion_upgrade_flags[i]));
                         }
                     }
+                    if (itemRAW.details.infix_upgrade != null)
+                    {
+                        InfixUpgrade newInfixUpgrade = new InfixUpgrade();
+
+                        if (itemRAW.details.infix_upgrade.buff != null)
+                        {
+                            int skillID = itemRAW.details.infix_upgrade.buff.skill_id;
+                            ItemBuff newBuff = new ItemBuff
+                            {
+                                SkillID = itemRAW.details.infix_upgrade.buff.skill_id,
+                                Description = itemRAW.details.infix_upgrade.buff.description
+                            };
+                            newInfixUpgrade.Buff = newBuff;
+                        }
+                        if (itemRAW.details.infix_upgrade.attributes != null)
+                        {
+                            List<ItemAttribute> newAttributes = new List<ItemAttribute>();
+                            for (int i = 0; i < itemRAW.details.infix_upgrade.attributes.Length; i++)
+                            {
+                                ItemAttribute newAttribute = new ItemAttribute
+                                {
+                                    Att = (ItemAttribute.Attribute)Enum.Parse(typeof(ItemAttribute.Attribute), itemRAW.details.infix_upgrade.attributes[i].attribute),
+                                    Modifier = itemRAW.details.infix_upgrade.attributes[i].modifier
+                                };
+                                newAttributes.Add(newAttribute);
+                            }
+                            newInfixUpgrade.Attributes = newAttributes;
+                        }
+
+                        newItemDetail.InfixUpgrades = newInfixUpgrade;
+                    }
                     if (itemRAW.details.flags != null)
                     {
                         for (int i = 0; i < itemRAW.details.flags.Length; i++)

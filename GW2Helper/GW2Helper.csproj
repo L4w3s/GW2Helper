@@ -34,6 +34,12 @@
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
+  <PropertyGroup>
+    <StartupObject>GW2Helper.App</StartupObject>
+  </PropertyGroup>
+  <PropertyGroup>
+    <ApplicationIcon>Resources\gw2.ico</ApplicationIcon>
+  </PropertyGroup>
   <ItemGroup>
     <Reference Include="DevExpress.Images.v17.2, Version=17.2.6.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a, processorArchitecture=MSIL" />
     <Reference Include="DevExpress.Pdf.v17.2.Core, Version=17.2.6.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a, processorArchitecture=MSIL" />
@@ -71,6 +77,7 @@
     <Compile Include="Stuff\BackstoryAnswer.cs" />
     <Compile Include="Stuff\BackstoryQuestion.cs" />
     <Compile Include="Stuff\Achievement.cs" />
+    <Compile Include="Stuff\Bank.cs" />
     <Compile Include="Stuff\CharacterStuff\Equipment\Equipment.cs" />
     <Compile Include="Stuff\CharacterStuff\Equipment\EquipmentContainer.cs" />
     <Compile Include="Stuff\CharacterStuff\Skills\CraftingSkill.cs" />
@@ -134,6 +141,10 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Stuff\Objects\" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\gw2.ico" />
+    <Resource Include="Resources\gw2.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it.

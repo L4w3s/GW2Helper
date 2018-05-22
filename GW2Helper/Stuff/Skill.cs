@@ -150,9 +150,10 @@ namespace GW2Helper.Stuff
                                 using (WebClient client = new WebClient())
                                 {
                                     fileName = skillRAW.facts[i].icon.Substring(skillRAW.facts[i].icon.LastIndexOf("/") + 1);
-                                    if (!File.Exists(AppDomain.CurrentDomain.BaseDirectory + @"\images\skills\facts\" + fileName)) client.DownloadFileAsync(new Uri(skillRAW.facts[i].icon), AppDomain.CurrentDomain.BaseDirectory + @"\images\skills\facts\" + fileName);
+                                    Directory.CreateDirectory(AppDomain.CurrentDomain.BaseDirectory + @"images\skills\facts\");
+                                    if (!File.Exists(AppDomain.CurrentDomain.BaseDirectory + @"images\skills\facts\" + fileName)) client.DownloadFileAsync(new Uri(skillRAW.facts[i].icon), AppDomain.CurrentDomain.BaseDirectory + @"images\skills\facts\" + fileName);
                                 }
-                                newFact.Image = AppDomain.CurrentDomain.BaseDirectory + @"\images\skills\facts\" + fileName;
+                                newFact.Image = AppDomain.CurrentDomain.BaseDirectory + @"images\skills\facts\" + fileName;
                             }
                             newSkill.Facts.Add(newFact);
                         }
@@ -173,9 +174,10 @@ namespace GW2Helper.Stuff
                                 using (WebClient client = new WebClient())
                                 {
                                     fileName = skillRAW.facts[i].icon.Substring(skillRAW.facts[i].icon.LastIndexOf("/") + 1);
-                                    if (!File.Exists(AppDomain.CurrentDomain.BaseDirectory + @"\images\skills\facts\" + fileName)) client.DownloadFileAsync(new Uri(skillRAW.facts[i].icon), AppDomain.CurrentDomain.BaseDirectory + @"\images\skills\facts\" + fileName);
+                                    Directory.CreateDirectory(AppDomain.CurrentDomain.BaseDirectory + @"images\skills\facts\");
+                                    if (!File.Exists(AppDomain.CurrentDomain.BaseDirectory + @"images\skills\facts\" + fileName)) client.DownloadFileAsync(new Uri(skillRAW.facts[i].icon), AppDomain.CurrentDomain.BaseDirectory + @"images\skills\facts\" + fileName);
                                 }
-                                newFact.Image = AppDomain.CurrentDomain.BaseDirectory + @"\images\skills\facts\" + fileName;
+                                newFact.Image = AppDomain.CurrentDomain.BaseDirectory + @"images\skills\facts\" + fileName;
                             }
                             newSkill.Facts.Add(newFact);
                         }
@@ -193,9 +195,10 @@ namespace GW2Helper.Stuff
                                 using (WebClient client = new WebClient())
                                 {
                                     fileName = skillRAW.facts[i].icon.Substring(skillRAW.facts[i].icon.LastIndexOf("/") + 1);
-                                    if (!File.Exists(AppDomain.CurrentDomain.BaseDirectory + @"\images\skills\facts\" + fileName)) client.DownloadFileAsync(new Uri(skillRAW.facts[i].icon), AppDomain.CurrentDomain.BaseDirectory + @"\images\skills\facts\" + fileName);
+                                    Directory.CreateDirectory(AppDomain.CurrentDomain.BaseDirectory + @"images\skills\facts\");
+                                    if (!File.Exists(AppDomain.CurrentDomain.BaseDirectory + @"images\skills\facts\" + fileName)) client.DownloadFileAsync(new Uri(skillRAW.facts[i].icon), AppDomain.CurrentDomain.BaseDirectory + @"images\skills\facts\" + fileName);
                                 }
-                                newFact.Image = AppDomain.CurrentDomain.BaseDirectory + @"\images\skills\facts\" + fileName;
+                                newFact.Image = AppDomain.CurrentDomain.BaseDirectory + @"images\skills\facts\" + fileName;
                             }
                             newSkill.Facts.Add(newFact);
                         }
@@ -214,9 +217,10 @@ namespace GW2Helper.Stuff
                                 using (WebClient client = new WebClient())
                                 {
                                     fileName = skillRAW.facts[i].icon.Substring(skillRAW.facts[i].icon.LastIndexOf("/") + 1);
-                                    if (!File.Exists(AppDomain.CurrentDomain.BaseDirectory + @"\images\skills\facts\" + fileName)) client.DownloadFileAsync(new Uri(skillRAW.facts[i].icon), AppDomain.CurrentDomain.BaseDirectory + @"\images\skills\facts\" + fileName);
+                                    Directory.CreateDirectory(AppDomain.CurrentDomain.BaseDirectory + @"images\skills\facts\");
+                                    if (!File.Exists(AppDomain.CurrentDomain.BaseDirectory + @"images\skills\facts\" + fileName)) client.DownloadFileAsync(new Uri(skillRAW.facts[i].icon), AppDomain.CurrentDomain.BaseDirectory + @"images\skills\facts\" + fileName);
                                 }
-                                newFact.Image = AppDomain.CurrentDomain.BaseDirectory + @"\images\skills\facts\" + fileName;
+                                newFact.Image = AppDomain.CurrentDomain.BaseDirectory + @"images\skills\facts\" + fileName;
                             }
                             newSkill.Facts.Add(newFact);
                         }
@@ -235,9 +239,10 @@ namespace GW2Helper.Stuff
                                 using (WebClient client = new WebClient())
                                 {
                                     fileName = skillRAW.facts[i].icon.Substring(skillRAW.facts[i].icon.LastIndexOf("/") + 1);
-                                    if (!File.Exists(AppDomain.CurrentDomain.BaseDirectory + @"\images\skills\facts\" + fileName)) client.DownloadFileAsync(new Uri(skillRAW.facts[i].icon), AppDomain.CurrentDomain.BaseDirectory + @"\images\skills\facts\" + fileName);
+                                    Directory.CreateDirectory(AppDomain.CurrentDomain.BaseDirectory + @"images\skills\facts\");
+                                    if (!File.Exists(AppDomain.CurrentDomain.BaseDirectory + @"images\skills\facts\" + fileName)) client.DownloadFileAsync(new Uri(skillRAW.facts[i].icon), AppDomain.CurrentDomain.BaseDirectory + @"images\skills\facts\" + fileName);
                                 }
-                                newFact.Image = AppDomain.CurrentDomain.BaseDirectory + @"\images\skills\facts\" + fileName;
+                                newFact.Image = AppDomain.CurrentDomain.BaseDirectory + @"images\skills\facts\" + fileName;
                             }
                             newSkill.Facts.Add(newFact);
                         }
@@ -255,9 +260,10 @@ namespace GW2Helper.Stuff
                                 using (WebClient client = new WebClient())
                                 {
                                     fileName = skillRAW.facts[i].icon.Substring(skillRAW.facts[i].icon.LastIndexOf("/") + 1);
-                                    if (!File.Exists(AppDomain.CurrentDomain.BaseDirectory + @"\images\skills\facts\" + fileName)) client.DownloadFileAsync(new Uri(skillRAW.facts[i].icon), AppDomain.CurrentDomain.BaseDirectory + @"\images\skills\facts\" + fileName);
+                                    Directory.CreateDirectory(AppDomain.CurrentDomain.BaseDirectory + @"images\skills\facts\");
+                                    if (!File.Exists(AppDomain.CurrentDomain.BaseDirectory + @"images\skills\facts\" + fileName)) client.DownloadFileAsync(new Uri(skillRAW.facts[i].icon), AppDomain.CurrentDomain.BaseDirectory + @"images\skills\facts\" + fileName);
                                 }
-                                newFact.Image = AppDomain.CurrentDomain.BaseDirectory + @"\images\skills\facts\" + fileName;
+                                newFact.Image = AppDomain.CurrentDomain.BaseDirectory + @"images\skills\facts\" + fileName;
                             }
                             newSkill.Facts.Add(newFact);
                         }
@@ -275,9 +281,10 @@ namespace GW2Helper.Stuff
                                 using (WebClient client = new WebClient())
                                 {
                                     fileName = skillRAW.facts[i].icon.Substring(skillRAW.facts[i].icon.LastIndexOf("/") + 1);
-                                    if (!File.Exists(AppDomain.CurrentDomain.BaseDirectory + @"\images\skills\facts\" + fileName)) client.DownloadFileAsync(new Uri(skillRAW.facts[i].icon), AppDomain.CurrentDomain.BaseDirectory + @"\images\skills\facts\" + fileName);
+                                    Directory.CreateDirectory(AppDomain.CurrentDomain.BaseDirectory + @"images\skills\facts\");
+                                    if (!File.Exists(AppDomain.CurrentDomain.BaseDirectory + @"images\skills\facts\" + fileName)) client.DownloadFileAsync(new Uri(skillRAW.facts[i].icon), AppDomain.CurrentDomain.BaseDirectory + @"images\skills\facts\" + fileName);
                                 }
-                                newFact.Image = AppDomain.CurrentDomain.BaseDirectory + @"\images\skills\facts\" + fileName;
+                                newFact.Image = AppDomain.CurrentDomain.BaseDirectory + @"images\skills\facts\" + fileName;
                             }
                             newSkill.Facts.Add(newFact);
                         }
@@ -295,9 +302,10 @@ namespace GW2Helper.Stuff
                                 using (WebClient client = new WebClient())
                                 {
                                     fileName = skillRAW.facts[i].icon.Substring(skillRAW.facts[i].icon.LastIndexOf("/") + 1);
-                                    if (!File.Exists(AppDomain.CurrentDomain.BaseDirectory + @"\images\skills\facts\" + fileName)) client.DownloadFileAsync(new Uri(skillRAW.facts[i].icon), AppDomain.CurrentDomain.BaseDirectory + @"\images\skills\facts\" + fileName);
+                                    Directory.CreateDirectory(AppDomain.CurrentDomain.BaseDirectory + @"images\skills\facts\");
+                                    if (!File.Exists(AppDomain.CurrentDomain.BaseDirectory + @"images\skills\facts\" + fileName)) client.DownloadFileAsync(new Uri(skillRAW.facts[i].icon), AppDomain.CurrentDomain.BaseDirectory + @"images\skills\facts\" + fileName);
                                 }
-                                newFact.Image = AppDomain.CurrentDomain.BaseDirectory + @"\images\skills\facts\" + fileName;
+                                newFact.Image = AppDomain.CurrentDomain.BaseDirectory + @"images\skills\facts\" + fileName;
                             }
                             newSkill.Facts.Add(newFact);
                         }
@@ -315,9 +323,10 @@ namespace GW2Helper.Stuff
                                 using (WebClient client = new WebClient())
                                 {
                                     fileName = skillRAW.facts[i].icon.Substring(skillRAW.facts[i].icon.LastIndexOf("/") + 1);
-                                    if (!File.Exists(AppDomain.CurrentDomain.BaseDirectory + @"\images\skills\facts\" + fileName)) client.DownloadFileAsync(new Uri(skillRAW.facts[i].icon), AppDomain.CurrentDomain.BaseDirectory + @"\images\skills\facts\" + fileName);
+                                    Directory.CreateDirectory(AppDomain.CurrentDomain.BaseDirectory + @"images\skills\facts\");
+                                    if (!File.Exists(AppDomain.CurrentDomain.BaseDirectory + @"images\skills\facts\" + fileName)) client.DownloadFileAsync(new Uri(skillRAW.facts[i].icon), AppDomain.CurrentDomain.BaseDirectory + @"images\skills\facts\" + fileName);
                                 }
-                                newFact.Image = AppDomain.CurrentDomain.BaseDirectory + @"\images\skills\facts\" + fileName;
+                                newFact.Image = AppDomain.CurrentDomain.BaseDirectory + @"images\skills\facts\" + fileName;
                             }
                             newSkill.Facts.Add(newFact);
                         }
@@ -334,9 +343,10 @@ namespace GW2Helper.Stuff
                                 using (WebClient client = new WebClient())
                                 {
                                     fileName = skillRAW.facts[i].icon.Substring(skillRAW.facts[i].icon.LastIndexOf("/") + 1);
-                                    if (!File.Exists(AppDomain.CurrentDomain.BaseDirectory + @"\images\skills\facts\" + fileName)) client.DownloadFileAsync(new Uri(skillRAW.facts[i].icon), AppDomain.CurrentDomain.BaseDirectory + @"\images\skills\facts\" + fileName);
+                                    Directory.CreateDirectory(AppDomain.CurrentDomain.BaseDirectory + @"images\skills\facts\");
+                                    if (!File.Exists(AppDomain.CurrentDomain.BaseDirectory + @"images\skills\facts\" + fileName)) client.DownloadFileAsync(new Uri(skillRAW.facts[i].icon), AppDomain.CurrentDomain.BaseDirectory + @"images\skills\facts\" + fileName);
                                 }
-                                newFact.Image = AppDomain.CurrentDomain.BaseDirectory + @"\images\skills\facts\" + fileName;
+                                newFact.Image = AppDomain.CurrentDomain.BaseDirectory + @"images\skills\facts\" + fileName;
                             }
                             newSkill.Facts.Add(newFact);
                         }
@@ -354,9 +364,10 @@ namespace GW2Helper.Stuff
                                 using (WebClient client = new WebClient())
                                 {
                                     fileName = skillRAW.facts[i].icon.Substring(skillRAW.facts[i].icon.LastIndexOf("/") + 1);
-                                    if (!File.Exists(AppDomain.CurrentDomain.BaseDirectory + @"\images\skills\facts\" + fileName)) client.DownloadFileAsync(new Uri(skillRAW.facts[i].icon), AppDomain.CurrentDomain.BaseDirectory + @"\images\skills\facts\" + fileName);
+                                    Directory.CreateDirectory(AppDomain.CurrentDomain.BaseDirectory + @"images\skills\facts\");
+                                    if (!File.Exists(AppDomain.CurrentDomain.BaseDirectory + @"images\skills\facts\" + fileName)) client.DownloadFileAsync(new Uri(skillRAW.facts[i].icon), AppDomain.CurrentDomain.BaseDirectory + @"images\skills\facts\" + fileName);
                                 }
-                                newFact.Image = AppDomain.CurrentDomain.BaseDirectory + @"\images\skills\facts\" + fileName;
+                                newFact.Image = AppDomain.CurrentDomain.BaseDirectory + @"images\skills\facts\" + fileName;
                             }
                             newSkill.Facts.Add(newFact);
                         }
@@ -374,9 +385,10 @@ namespace GW2Helper.Stuff
                                 using (WebClient client = new WebClient())
                                 {
                                     fileName = skillRAW.facts[i].icon.Substring(skillRAW.facts[i].icon.LastIndexOf("/") + 1);
-                                    if (!File.Exists(AppDomain.CurrentDomain.BaseDirectory + @"\images\skills\facts\" + fileName)) client.DownloadFileAsync(new Uri(skillRAW.facts[i].icon), AppDomain.CurrentDomain.BaseDirectory + @"\images\skills\facts\" + fileName);
+                                    Directory.CreateDirectory(AppDomain.CurrentDomain.BaseDirectory + @"images\skills\facts\");
+                                    if (!File.Exists(AppDomain.CurrentDomain.BaseDirectory + @"images\skills\facts\" + fileName)) client.DownloadFileAsync(new Uri(skillRAW.facts[i].icon), AppDomain.CurrentDomain.BaseDirectory + @"images\skills\facts\" + fileName);
                                 }
-                                newFact.Image = AppDomain.CurrentDomain.BaseDirectory + @"\images\skills\facts\" + fileName;
+                                newFact.Image = AppDomain.CurrentDomain.BaseDirectory + @"images\skills\facts\" + fileName;
                             }
                             newSkill.Facts.Add(newFact);
                         }
@@ -405,9 +417,10 @@ namespace GW2Helper.Stuff
                                     using (WebClient client = new WebClient())
                                     {
                                         fileName = skillRAW.facts[i].prefix.icon.Substring(skillRAW.facts[i].prefix.icon.LastIndexOf("/") + 1);
-                                        if (!File.Exists(AppDomain.CurrentDomain.BaseDirectory + @"\images\skills\facts\buffprefix\" + fileName)) client.DownloadFileAsync(new Uri(skillRAW.facts[i].prefix.icon), AppDomain.CurrentDomain.BaseDirectory + @"\images\skills\facts\buffprefix\" + fileName);
+                                        Directory.CreateDirectory(AppDomain.CurrentDomain.BaseDirectory + @"images\skills\facts\buffprefix\");
+                                        if (!File.Exists(AppDomain.CurrentDomain.BaseDirectory + @"images\skills\facts\buffprefix\" + fileName)) client.DownloadFileAsync(new Uri(skillRAW.facts[i].prefix.icon), AppDomain.CurrentDomain.BaseDirectory + @"images\skills\facts\buffprefix\" + fileName);
                                     }
-                                    newPrefix.Icon = AppDomain.CurrentDomain.BaseDirectory + @"\images\skills\facts\buffprefix\" + fileName;
+                                    newPrefix.Icon = AppDomain.CurrentDomain.BaseDirectory + @"images\skills\facts\buffprefix\" + fileName;
                                 }
                                 newFact.BuffPrefix = newPrefix;
                             }
@@ -417,9 +430,10 @@ namespace GW2Helper.Stuff
                                 using (WebClient client = new WebClient())
                                 {
                                     fileName = skillRAW.facts[i].icon.Substring(skillRAW.facts[i].icon.LastIndexOf("/") + 1);
-                                    if (!File.Exists(AppDomain.CurrentDomain.BaseDirectory + @"\images\skills\facts\" + fileName)) client.DownloadFileAsync(new Uri(skillRAW.facts[i].icon), AppDomain.CurrentDomain.BaseDirectory + @"\images\skills\facts\" + fileName);
+                                    Directory.CreateDirectory(AppDomain.CurrentDomain.BaseDirectory + @"images\skills\facts\");
+                                    if (!File.Exists(AppDomain.CurrentDomain.BaseDirectory + @"images\skills\facts\" + fileName)) client.DownloadFileAsync(new Uri(skillRAW.facts[i].icon), AppDomain.CurrentDomain.BaseDirectory + @"images\skills\facts\" + fileName);
                                 }
-                                newFact.Image = AppDomain.CurrentDomain.BaseDirectory + @"\images\skills\facts\" + fileName;
+                                newFact.Image = AppDomain.CurrentDomain.BaseDirectory + @"images\skills\facts\" + fileName;
                             }
                             newSkill.Facts.Add(newFact);
                         }
@@ -437,9 +451,10 @@ namespace GW2Helper.Stuff
                                 using (WebClient client = new WebClient())
                                 {
                                     fileName = skillRAW.facts[i].icon.Substring(skillRAW.facts[i].icon.LastIndexOf("/") + 1);
-                                    if (!File.Exists(AppDomain.CurrentDomain.BaseDirectory + @"\images\skills\facts\" + fileName)) client.DownloadFileAsync(new Uri(skillRAW.facts[i].icon), AppDomain.CurrentDomain.BaseDirectory + @"\images\skills\facts\" + fileName);
+                                    Directory.CreateDirectory(AppDomain.CurrentDomain.BaseDirectory + @"images\skills\facts\");
+                                    if (!File.Exists(AppDomain.CurrentDomain.BaseDirectory + @"images\skills\facts\" + fileName)) client.DownloadFileAsync(new Uri(skillRAW.facts[i].icon), AppDomain.CurrentDomain.BaseDirectory + @"images\skills\facts\" + fileName);
                                 }
-                                newFact.Image = AppDomain.CurrentDomain.BaseDirectory + @"\images\skills\facts\" + fileName;
+                                newFact.Image = AppDomain.CurrentDomain.BaseDirectory + @"images\skills\facts\" + fileName;
                             }
                             newSkill.Facts.Add(newFact);
                         }
@@ -457,9 +472,10 @@ namespace GW2Helper.Stuff
                                 using (WebClient client = new WebClient())
                                 {
                                     fileName = skillRAW.facts[i].icon.Substring(skillRAW.facts[i].icon.LastIndexOf("/") + 1);
-                                    if (!File.Exists(AppDomain.CurrentDomain.BaseDirectory + @"\images\skills\facts\" + fileName)) client.DownloadFileAsync(new Uri(skillRAW.facts[i].icon), AppDomain.CurrentDomain.BaseDirectory + @"\images\skills\facts\" + fileName);
+                                    Directory.CreateDirectory(AppDomain.CurrentDomain.BaseDirectory + @"images\skills\facts\");
+                                    if (!File.Exists(AppDomain.CurrentDomain.BaseDirectory + @"images\skills\facts\" + fileName)) client.DownloadFileAsync(new Uri(skillRAW.facts[i].icon), AppDomain.CurrentDomain.BaseDirectory + @"images\skills\facts\" + fileName);
                                 }
-                                newFact.Image = AppDomain.CurrentDomain.BaseDirectory + @"\images\skills\facts\" + fileName;
+                                newFact.Image = AppDomain.CurrentDomain.BaseDirectory + @"images\skills\facts\" + fileName;
                             }
                             newSkill.Facts.Add(newFact);
                         }
@@ -477,9 +493,10 @@ namespace GW2Helper.Stuff
                                 using (WebClient client = new WebClient())
                                 {
                                     fileName = skillRAW.facts[i].icon.Substring(skillRAW.facts[i].icon.LastIndexOf("/") + 1);
-                                    if (!File.Exists(AppDomain.CurrentDomain.BaseDirectory + @"\images\skills\facts\" + fileName)) client.DownloadFileAsync(new Uri(skillRAW.facts[i].icon), AppDomain.CurrentDomain.BaseDirectory + @"\images\skills\facts\" + fileName);
+                                    Directory.CreateDirectory(AppDomain.CurrentDomain.BaseDirectory + @"images\skills\facts\");
+                                    if (!File.Exists(AppDomain.CurrentDomain.BaseDirectory + @"images\skills\facts\" + fileName)) client.DownloadFileAsync(new Uri(skillRAW.facts[i].icon), AppDomain.CurrentDomain.BaseDirectory + @"images\skills\facts\" + fileName);
                                 }
-                                newFact.Image = AppDomain.CurrentDomain.BaseDirectory + @"\images\skills\facts\" + fileName;
+                                newFact.Image = AppDomain.CurrentDomain.BaseDirectory + @"images\skills\facts\" + fileName;
                             }
                             newSkill.Facts.Add(newFact);
                         }
@@ -497,9 +514,10 @@ namespace GW2Helper.Stuff
                                 using (WebClient client = new WebClient())
                                 {
                                     fileName = skillRAW.facts[i].icon.Substring(skillRAW.facts[i].icon.LastIndexOf("/") + 1);
-                                    if (!File.Exists(AppDomain.CurrentDomain.BaseDirectory + @"\images\skills\facts\" + fileName)) client.DownloadFileAsync(new Uri(skillRAW.facts[i].icon), AppDomain.CurrentDomain.BaseDirectory + @"\images\skills\facts\" + fileName);
+                                    Directory.CreateDirectory(AppDomain.CurrentDomain.BaseDirectory + @"images\skills\facts\");
+                                    if (!File.Exists(AppDomain.CurrentDomain.BaseDirectory + @"images\skills\facts\" + fileName)) client.DownloadFileAsync(new Uri(skillRAW.facts[i].icon), AppDomain.CurrentDomain.BaseDirectory + @"images\skills\facts\" + fileName);
                                 }
-                                newFact.Image = AppDomain.CurrentDomain.BaseDirectory + @"\images\skills\facts\" + fileName;
+                                newFact.Image = AppDomain.CurrentDomain.BaseDirectory + @"images\skills\facts\" + fileName;
                             }
                             newSkill.Facts.Add(newFact);
                         }
@@ -517,9 +535,10 @@ namespace GW2Helper.Stuff
                                 using (WebClient client = new WebClient())
                                 {
                                     fileName = skillRAW.facts[i].icon.Substring(skillRAW.facts[i].icon.LastIndexOf("/") + 1);
-                                    if (!File.Exists(AppDomain.CurrentDomain.BaseDirectory + @"\images\skills\facts\" + fileName)) client.DownloadFileAsync(new Uri(skillRAW.facts[i].icon), AppDomain.CurrentDomain.BaseDirectory + @"\images\skills\facts\" + fileName);
+                                    Directory.CreateDirectory(AppDomain.CurrentDomain.BaseDirectory + @"images\skills\facts\");
+                                    if (!File.Exists(AppDomain.CurrentDomain.BaseDirectory + @"images\skills\facts\" + fileName)) client.DownloadFileAsync(new Uri(skillRAW.facts[i].icon), AppDomain.CurrentDomain.BaseDirectory + @"images\skills\facts\" + fileName);
                                 }
-                                newFact.Image = AppDomain.CurrentDomain.BaseDirectory + @"\images\skills\facts\" + fileName;
+                                newFact.Image = AppDomain.CurrentDomain.BaseDirectory + @"images\skills\facts\" + fileName;
                             }
                             newSkill.Facts.Add(newFact);
                         }
@@ -547,9 +566,10 @@ namespace GW2Helper.Stuff
                                 using (WebClient client = new WebClient())
                                 {
                                     fileName = skillRAW.traited_facts[i].icon.Substring(skillRAW.traited_facts[i].icon.LastIndexOf("/") + 1);
-                                    if (!File.Exists(AppDomain.CurrentDomain.BaseDirectory + @"\images\skills\facts\" + fileName)) client.DownloadFileAsync(new Uri(skillRAW.traited_facts[i].icon), AppDomain.CurrentDomain.BaseDirectory + @"\images\skills\facts\" + fileName);
+                                    Directory.CreateDirectory(AppDomain.CurrentDomain.BaseDirectory + @"images\skills\facts\");
+                                    if (!File.Exists(AppDomain.CurrentDomain.BaseDirectory + @"images\skills\facts\" + fileName)) client.DownloadFileAsync(new Uri(skillRAW.traited_facts[i].icon), AppDomain.CurrentDomain.BaseDirectory + @"images\skills\facts\" + fileName);
                                 }
-                                newFact.Image = AppDomain.CurrentDomain.BaseDirectory + @"\images\skills\facts\" + fileName;
+                                newFact.Image = AppDomain.CurrentDomain.BaseDirectory + @"images\skills\facts\" + fileName;
                             }
                             newSkill.TraitedFacts.Add(newFact);
                         }
@@ -572,9 +592,10 @@ namespace GW2Helper.Stuff
                                 using (WebClient client = new WebClient())
                                 {
                                     fileName = skillRAW.traited_facts[i].icon.Substring(skillRAW.traited_facts[i].icon.LastIndexOf("/") + 1);
-                                    if (!File.Exists(AppDomain.CurrentDomain.BaseDirectory + @"\images\skills\facts\" + fileName)) client.DownloadFileAsync(new Uri(skillRAW.traited_facts[i].icon), AppDomain.CurrentDomain.BaseDirectory + @"\images\skills\facts\" + fileName);
+                                    Directory.CreateDirectory(AppDomain.CurrentDomain.BaseDirectory + @"images\skills\facts\");
+                                    if (!File.Exists(AppDomain.CurrentDomain.BaseDirectory + @"images\skills\facts\" + fileName)) client.DownloadFileAsync(new Uri(skillRAW.traited_facts[i].icon), AppDomain.CurrentDomain.BaseDirectory + @"images\skills\facts\" + fileName);
                                 }
-                                newFact.Image = AppDomain.CurrentDomain.BaseDirectory + @"\images\skills\facts\" + fileName;
+                                newFact.Image = AppDomain.CurrentDomain.BaseDirectory + @"images\skills\facts\" + fileName;
                             }
                             newSkill.TraitedFacts.Add(newFact);
                         }
@@ -594,9 +615,10 @@ namespace GW2Helper.Stuff
                                 using (WebClient client = new WebClient())
                                 {
                                     fileName = skillRAW.traited_facts[i].icon.Substring(skillRAW.traited_facts[i].icon.LastIndexOf("/") + 1);
-                                    if (!File.Exists(AppDomain.CurrentDomain.BaseDirectory + @"\images\skills\facts\" + fileName)) client.DownloadFileAsync(new Uri(skillRAW.traited_facts[i].icon), AppDomain.CurrentDomain.BaseDirectory + @"\images\skills\facts\" + fileName);
+                                    Directory.CreateDirectory(AppDomain.CurrentDomain.BaseDirectory + @"images\skills\facts\");
+                                    if (!File.Exists(AppDomain.CurrentDomain.BaseDirectory + @"images\skills\facts\" + fileName)) client.DownloadFileAsync(new Uri(skillRAW.traited_facts[i].icon), AppDomain.CurrentDomain.BaseDirectory + @"images\skills\facts\" + fileName);
                                 }
-                                newFact.Image = AppDomain.CurrentDomain.BaseDirectory + @"\images\skills\facts\" + fileName;
+                                newFact.Image = AppDomain.CurrentDomain.BaseDirectory + @"images\skills\facts\" + fileName;
                             }
                             newSkill.TraitedFacts.Add(newFact);
                         }
@@ -617,9 +639,10 @@ namespace GW2Helper.Stuff
                                 using (WebClient client = new WebClient())
                                 {
                                     fileName = skillRAW.traited_facts[i].icon.Substring(skillRAW.traited_facts[i].icon.LastIndexOf("/") + 1);
-                                    if (!File.Exists(AppDomain.CurrentDomain.BaseDirectory + @"\images\skills\facts\" + fileName)) client.DownloadFileAsync(new Uri(skillRAW.traited_facts[i].icon), AppDomain.CurrentDomain.BaseDirectory + @"\images\skills\facts\" + fileName);
+                                    Directory.CreateDirectory(AppDomain.CurrentDomain.BaseDirectory + @"images\skills\facts\");
+                                    if (!File.Exists(AppDomain.CurrentDomain.BaseDirectory + @"images\skills\facts\" + fileName)) client.DownloadFileAsync(new Uri(skillRAW.traited_facts[i].icon), AppDomain.CurrentDomain.BaseDirectory + @"images\skills\facts\" + fileName);
                                 }
-                                newFact.Image = AppDomain.CurrentDomain.BaseDirectory + @"\images\skills\facts\" + fileName;
+                                newFact.Image = AppDomain.CurrentDomain.BaseDirectory + @"images\skills\facts\" + fileName;
                             }
                             newSkill.TraitedFacts.Add(newFact);
                         }
@@ -640,9 +663,10 @@ namespace GW2Helper.Stuff
                                 using (WebClient client = new WebClient())
                                 {
                                     fileName = skillRAW.traited_facts[i].icon.Substring(skillRAW.traited_facts[i].icon.LastIndexOf("/") + 1);
-                                    if (!File.Exists(AppDomain.CurrentDomain.BaseDirectory + @"\images\skills\facts\" + fileName)) client.DownloadFileAsync(new Uri(skillRAW.traited_facts[i].icon), AppDomain.CurrentDomain.BaseDirectory + @"\images\skills\facts\" + fileName);
+                                    Directory.CreateDirectory(AppDomain.CurrentDomain.BaseDirectory + @"images\skills\facts\");
+                                    if (!File.Exists(AppDomain.CurrentDomain.BaseDirectory + @"images\skills\facts\" + fileName)) client.DownloadFileAsync(new Uri(skillRAW.traited_facts[i].icon), AppDomain.CurrentDomain.BaseDirectory + @"images\skills\facts\" + fileName);
                                 }
-                                newFact.Image = AppDomain.CurrentDomain.BaseDirectory + @"\images\skills\facts\" + fileName;
+                                newFact.Image = AppDomain.CurrentDomain.BaseDirectory + @"images\skills\facts\" + fileName;
                             }
                             newSkill.TraitedFacts.Add(newFact);
                         }
@@ -662,9 +686,10 @@ namespace GW2Helper.Stuff
                                 using (WebClient client = new WebClient())
                                 {
                                     fileName = skillRAW.traited_facts[i].icon.Substring(skillRAW.traited_facts[i].icon.LastIndexOf("/") + 1);
-                                    if (!File.Exists(AppDomain.CurrentDomain.BaseDirectory + @"\images\skills\facts\" + fileName)) client.DownloadFileAsync(new Uri(skillRAW.traited_facts[i].icon), AppDomain.CurrentDomain.BaseDirectory + @"\images\skills\facts\" + fileName);
+                                    Directory.CreateDirectory(AppDomain.CurrentDomain.BaseDirectory + @"images\skills\facts\");
+                                    if (!File.Exists(AppDomain.CurrentDomain.BaseDirectory + @"images\skills\facts\" + fileName)) client.DownloadFileAsync(new Uri(skillRAW.traited_facts[i].icon), AppDomain.CurrentDomain.BaseDirectory + @"images\skills\facts\" + fileName);
                                 }
-                                newFact.Image = AppDomain.CurrentDomain.BaseDirectory + @"\images\skills\facts\" + fileName;
+                                newFact.Image = AppDomain.CurrentDomain.BaseDirectory + @"images\skills\facts\" + fileName;
                             }
                             newSkill.TraitedFacts.Add(newFact);
                         }
@@ -684,9 +709,10 @@ namespace GW2Helper.Stuff
                                 using (WebClient client = new WebClient())
                                 {
                                     fileName = skillRAW.traited_facts[i].icon.Substring(skillRAW.traited_facts[i].icon.LastIndexOf("/") + 1);
-                                    if (!File.Exists(AppDomain.CurrentDomain.BaseDirectory + @"\images\skills\facts\" + fileName)) client.DownloadFileAsync(new Uri(skillRAW.traited_facts[i].icon), AppDomain.CurrentDomain.BaseDirectory + @"\images\skills\facts\" + fileName);
+                                    Directory.CreateDirectory(AppDomain.CurrentDomain.BaseDirectory + @"images\skills\facts\");
+                                    if (!File.Exists(AppDomain.CurrentDomain.BaseDirectory + @"images\skills\facts\" + fileName)) client.DownloadFileAsync(new Uri(skillRAW.traited_facts[i].icon), AppDomain.CurrentDomain.BaseDirectory + @"images\skills\facts\" + fileName);
                                 }
-                                newFact.Image = AppDomain.CurrentDomain.BaseDirectory + @"\images\skills\facts\" + fileName;
+                                newFact.Image = AppDomain.CurrentDomain.BaseDirectory + @"images\skills\facts\" + fileName;
                             }
                             newSkill.TraitedFacts.Add(newFact);
                         }
@@ -706,9 +732,10 @@ namespace GW2Helper.Stuff
                                 using (WebClient client = new WebClient())
                                 {
                                     fileName = skillRAW.traited_facts[i].icon.Substring(skillRAW.traited_facts[i].icon.LastIndexOf("/") + 1);
-                                    if (!File.Exists(AppDomain.CurrentDomain.BaseDirectory + @"\images\skills\facts\" + fileName)) client.DownloadFileAsync(new Uri(skillRAW.traited_facts[i].icon), AppDomain.CurrentDomain.BaseDirectory + @"\images\skills\facts\" + fileName);
+                                    Directory.CreateDirectory(AppDomain.CurrentDomain.BaseDirectory + @"images\skills\facts\");
+                                    if (!File.Exists(AppDomain.CurrentDomain.BaseDirectory + @"images\skills\facts\" + fileName)) client.DownloadFileAsync(new Uri(skillRAW.traited_facts[i].icon), AppDomain.CurrentDomain.BaseDirectory + @"images\skills\facts\" + fileName);
                                 }
-                                newFact.Image = AppDomain.CurrentDomain.BaseDirectory + @"\images\skills\facts\" + fileName;
+                                newFact.Image = AppDomain.CurrentDomain.BaseDirectory + @"images\skills\facts\" + fileName;
                             }
                             newSkill.TraitedFacts.Add(newFact);
                         }
@@ -728,9 +755,10 @@ namespace GW2Helper.Stuff
                                 using (WebClient client = new WebClient())
                                 {
                                     fileName = skillRAW.traited_facts[i].icon.Substring(skillRAW.traited_facts[i].icon.LastIndexOf("/") + 1);
-                                    if (!File.Exists(AppDomain.CurrentDomain.BaseDirectory + @"\images\skills\facts\" + fileName)) client.DownloadFileAsync(new Uri(skillRAW.traited_facts[i].icon), AppDomain.CurrentDomain.BaseDirectory + @"\images\skills\facts\" + fileName);
+                                    Directory.CreateDirectory(AppDomain.CurrentDomain.BaseDirectory + @"images\skills\facts\");
+                                    if (!File.Exists(AppDomain.CurrentDomain.BaseDirectory + @"images\skills\facts\" + fileName)) client.DownloadFileAsync(new Uri(skillRAW.traited_facts[i].icon), AppDomain.CurrentDomain.BaseDirectory + @"images\skills\facts\" + fileName);
                                 }
-                                newFact.Image = AppDomain.CurrentDomain.BaseDirectory + @"\images\skills\facts\" + fileName;
+                                newFact.Image = AppDomain.CurrentDomain.BaseDirectory + @"images\skills\facts\" + fileName;
                             }
                             newSkill.TraitedFacts.Add(newFact);
                         }
@@ -749,9 +777,10 @@ namespace GW2Helper.Stuff
                                 using (WebClient client = new WebClient())
                                 {
                                     fileName = skillRAW.traited_facts[i].icon.Substring(skillRAW.traited_facts[i].icon.LastIndexOf("/") + 1);
-                                    if (!File.Exists(AppDomain.CurrentDomain.BaseDirectory + @"\images\skills\facts\" + fileName)) client.DownloadFileAsync(new Uri(skillRAW.traited_facts[i].icon), AppDomain.CurrentDomain.BaseDirectory + @"\images\skills\facts\" + fileName);
+                                    Directory.CreateDirectory(AppDomain.CurrentDomain.BaseDirectory + @"images\skills\facts\");
+                                    if (!File.Exists(AppDomain.CurrentDomain.BaseDirectory + @"images\skills\facts\" + fileName)) client.DownloadFileAsync(new Uri(skillRAW.traited_facts[i].icon), AppDomain.CurrentDomain.BaseDirectory + @"images\skills\facts\" + fileName);
                                 }
-                                newFact.Image = AppDomain.CurrentDomain.BaseDirectory + @"\images\skills\facts\" + fileName;
+                                newFact.Image = AppDomain.CurrentDomain.BaseDirectory + @"images\skills\facts\" + fileName;
                             }
                             newSkill.TraitedFacts.Add(newFact);
                         }
@@ -771,9 +800,10 @@ namespace GW2Helper.Stuff
                                 using (WebClient client = new WebClient())
                                 {
                                     fileName = skillRAW.traited_facts[i].icon.Substring(skillRAW.traited_facts[i].icon.LastIndexOf("/") + 1);
-                                    if (!File.Exists(AppDomain.CurrentDomain.BaseDirectory + @"\images\skills\facts\" + fileName)) client.DownloadFileAsync(new Uri(skillRAW.traited_facts[i].icon), AppDomain.CurrentDomain.BaseDirectory + @"\images\skills\facts\" + fileName);
+                                    Directory.CreateDirectory(AppDomain.CurrentDomain.BaseDirectory + @"images\skills\facts\");
+                                    if (!File.Exists(AppDomain.CurrentDomain.BaseDirectory + @"images\skills\facts\" + fileName)) client.DownloadFileAsync(new Uri(skillRAW.traited_facts[i].icon), AppDomain.CurrentDomain.BaseDirectory + @"images\skills\facts\" + fileName);
                                 }
-                                newFact.Image = AppDomain.CurrentDomain.BaseDirectory + @"\images\skills\facts\" + fileName;
+                                newFact.Image = AppDomain.CurrentDomain.BaseDirectory + @"images\skills\facts\" + fileName;
                             }
                             newSkill.TraitedFacts.Add(newFact);
                         }
@@ -793,9 +823,10 @@ namespace GW2Helper.Stuff
                                 using (WebClient client = new WebClient())
                                 {
                                     fileName = skillRAW.traited_facts[i].icon.Substring(skillRAW.traited_facts[i].icon.LastIndexOf("/") + 1);
-                                    if (!File.Exists(AppDomain.CurrentDomain.BaseDirectory + @"\images\skills\facts\" + fileName)) client.DownloadFileAsync(new Uri(skillRAW.traited_facts[i].icon), AppDomain.CurrentDomain.BaseDirectory + @"\images\skills\facts\" + fileName);
+                                    Directory.CreateDirectory(AppDomain.CurrentDomain.BaseDirectory + @"images\skills\facts\");
+                                    if (!File.Exists(AppDomain.CurrentDomain.BaseDirectory + @"images\skills\facts\" + fileName)) client.DownloadFileAsync(new Uri(skillRAW.traited_facts[i].icon), AppDomain.CurrentDomain.BaseDirectory + @"images\skills\facts\" + fileName);
                                 }
-                                newFact.Image = AppDomain.CurrentDomain.BaseDirectory + @"\images\skills\facts\" + fileName;
+                                newFact.Image = AppDomain.CurrentDomain.BaseDirectory + @"images\skills\facts\" + fileName;
                             }
                             newSkill.TraitedFacts.Add(newFact);
                         }
@@ -826,9 +857,10 @@ namespace GW2Helper.Stuff
                                     using (WebClient client = new WebClient())
                                     {
                                         fileName = skillRAW.traited_facts[i].prefix.icon.Substring(skillRAW.traited_facts[i].prefix.icon.LastIndexOf("/") + 1);
-                                        if (!File.Exists(AppDomain.CurrentDomain.BaseDirectory + @"\images\skills\facts\buffprefix\" + fileName)) client.DownloadFileAsync(new Uri(skillRAW.traited_facts[i].prefix.icon), AppDomain.CurrentDomain.BaseDirectory + @"\images\skills\facts\buffprefix\" + fileName);
+                                        Directory.CreateDirectory(AppDomain.CurrentDomain.BaseDirectory + @"images\skills\facts\buffprefix\");
+                                        if (!File.Exists(AppDomain.CurrentDomain.BaseDirectory + @"images\skills\facts\buffprefix\" + fileName)) client.DownloadFileAsync(new Uri(skillRAW.traited_facts[i].prefix.icon), AppDomain.CurrentDomain.BaseDirectory + @"images\skills\facts\buffprefix\" + fileName);
                                     }
-                                    newPrefix.Icon = AppDomain.CurrentDomain.BaseDirectory + @"\images\skills\facts\buffprefix\" + fileName;
+                                    newPrefix.Icon = AppDomain.CurrentDomain.BaseDirectory + @"images\skills\facts\buffprefix\" + fileName;
                                 }
                                 newFact.BuffPrefix = newPrefix;
                             }
@@ -838,9 +870,10 @@ namespace GW2Helper.Stuff
                                 using (WebClient client = new WebClient())
                                 {
                                     fileName = skillRAW.traited_facts[i].icon.Substring(skillRAW.traited_facts[i].icon.LastIndexOf("/") + 1);
-                                    if (!File.Exists(AppDomain.CurrentDomain.BaseDirectory + @"\images\skills\facts\" + fileName)) client.DownloadFileAsync(new Uri(skillRAW.traited_facts[i].icon), AppDomain.CurrentDomain.BaseDirectory + @"\images\skills\facts\" + fileName);
+                                    Directory.CreateDirectory(AppDomain.CurrentDomain.BaseDirectory + @"images\skills\facts\");
+                                    if (!File.Exists(AppDomain.CurrentDomain.BaseDirectory + @"images\skills\facts\" + fileName)) client.DownloadFileAsync(new Uri(skillRAW.traited_facts[i].icon), AppDomain.CurrentDomain.BaseDirectory + @"images\skills\facts\" + fileName);
                                 }
-                                newFact.Image = AppDomain.CurrentDomain.BaseDirectory + @"\images\skills\facts\" + fileName;
+                                newFact.Image = AppDomain.CurrentDomain.BaseDirectory + @"images\skills\facts\" + fileName;
                             }
                             newSkill.TraitedFacts.Add(newFact);
                         }
@@ -860,9 +893,10 @@ namespace GW2Helper.Stuff
                                 using (WebClient client = new WebClient())
                                 {
                                     fileName = skillRAW.traited_facts[i].icon.Substring(skillRAW.traited_facts[i].icon.LastIndexOf("/") + 1);
-                                    if (!File.Exists(AppDomain.CurrentDomain.BaseDirectory + @"\images\skills\facts\" + fileName)) client.DownloadFileAsync(new Uri(skillRAW.traited_facts[i].icon), AppDomain.CurrentDomain.BaseDirectory + @"\images\skills\facts\" + fileName);
+                                    Directory.CreateDirectory(AppDomain.CurrentDomain.BaseDirectory + @"images\skills\facts\");
+                                    if (!File.Exists(AppDomain.CurrentDomain.BaseDirectory + @"images\skills\facts\" + fileName)) client.DownloadFileAsync(new Uri(skillRAW.traited_facts[i].icon), AppDomain.CurrentDomain.BaseDirectory + @"images\skills\facts\" + fileName);
                                 }
-                                newFact.Image = AppDomain.CurrentDomain.BaseDirectory + @"\images\skills\facts\" + fileName;
+                                newFact.Image = AppDomain.CurrentDomain.BaseDirectory + @"images\skills\facts\" + fileName;
                             }
                             newSkill.TraitedFacts.Add(newFact);
                         }
@@ -882,9 +916,10 @@ namespace GW2Helper.Stuff
                                 using (WebClient client = new WebClient())
                                 {
                                     fileName = skillRAW.traited_facts[i].icon.Substring(skillRAW.traited_facts[i].icon.LastIndexOf("/") + 1);
-                                    if (!File.Exists(AppDomain.CurrentDomain.BaseDirectory + @"\images\skills\facts\" + fileName)) client.DownloadFileAsync(new Uri(skillRAW.traited_facts[i].icon), AppDomain.CurrentDomain.BaseDirectory + @"\images\skills\facts\" + fileName);
+                                    Directory.CreateDirectory(AppDomain.CurrentDomain.BaseDirectory + @"images\skills\facts\");
+                                    if (!File.Exists(AppDomain.CurrentDomain.BaseDirectory + @"images\skills\facts\" + fileName)) client.DownloadFileAsync(new Uri(skillRAW.traited_facts[i].icon), AppDomain.CurrentDomain.BaseDirectory + @"images\skills\facts\" + fileName);
                                 }
-                                newFact.Image = AppDomain.CurrentDomain.BaseDirectory + @"\images\skills\facts\" + fileName;
+                                newFact.Image = AppDomain.CurrentDomain.BaseDirectory + @"images\skills\facts\" + fileName;
                             }
                             newSkill.TraitedFacts.Add(newFact);
                         }
@@ -904,9 +939,10 @@ namespace GW2Helper.Stuff
                                 using (WebClient client = new WebClient())
                                 {
                                     fileName = skillRAW.traited_facts[i].icon.Substring(skillRAW.traited_facts[i].icon.LastIndexOf("/") + 1);
-                                    if (!File.Exists(AppDomain.CurrentDomain.BaseDirectory + @"\images\skills\facts\" + fileName)) client.DownloadFileAsync(new Uri(skillRAW.traited_facts[i].icon), AppDomain.CurrentDomain.BaseDirectory + @"\images\skills\facts\" + fileName);
+                                    Directory.CreateDirectory(AppDomain.CurrentDomain.BaseDirectory + @"images\skills\facts\");
+                                    if (!File.Exists(AppDomain.CurrentDomain.BaseDirectory + @"images\skills\facts\" + fileName)) client.DownloadFileAsync(new Uri(skillRAW.traited_facts[i].icon), AppDomain.CurrentDomain.BaseDirectory + @"images\skills\facts\" + fileName);
                                 }
-                                newFact.Image = AppDomain.CurrentDomain.BaseDirectory + @"\images\skills\facts\" + fileName;
+                                newFact.Image = AppDomain.CurrentDomain.BaseDirectory + @"images\skills\facts\" + fileName;
                             }
                             newSkill.TraitedFacts.Add(newFact);
                         }
@@ -926,9 +962,10 @@ namespace GW2Helper.Stuff
                                 using (WebClient client = new WebClient())
                                 {
                                     fileName = skillRAW.traited_facts[i].icon.Substring(skillRAW.traited_facts[i].icon.LastIndexOf("/") + 1);
-                                    if (!File.Exists(AppDomain.CurrentDomain.BaseDirectory + @"\images\skills\facts\" + fileName)) client.DownloadFileAsync(new Uri(skillRAW.traited_facts[i].icon), AppDomain.CurrentDomain.BaseDirectory + @"\images\skills\facts\" + fileName);
+                                    Directory.CreateDirectory(AppDomain.CurrentDomain.BaseDirectory + @"images\skills\facts\");
+                                    if (!File.Exists(AppDomain.CurrentDomain.BaseDirectory + @"images\skills\facts\" + fileName)) client.DownloadFileAsync(new Uri(skillRAW.traited_facts[i].icon), AppDomain.CurrentDomain.BaseDirectory + @"images\skills\facts\" + fileName);
                                 }
-                                newFact.Image = AppDomain.CurrentDomain.BaseDirectory + @"\images\skills\facts\" + fileName;
+                                newFact.Image = AppDomain.CurrentDomain.BaseDirectory + @"images\skills\facts\" + fileName;
                             }
                             newSkill.TraitedFacts.Add(newFact);
                         }
@@ -948,9 +985,10 @@ namespace GW2Helper.Stuff
                                 using (WebClient client = new WebClient())
                                 {
                                     fileName = skillRAW.traited_facts[i].icon.Substring(skillRAW.traited_facts[i].icon.LastIndexOf("/") + 1);
-                                    if (!File.Exists(AppDomain.CurrentDomain.BaseDirectory + @"\images\skills\facts\" + fileName)) client.DownloadFileAsync(new Uri(skillRAW.traited_facts[i].icon), AppDomain.CurrentDomain.BaseDirectory + @"\images\skills\facts\" + fileName);
+                                    Directory.CreateDirectory(AppDomain.CurrentDomain.BaseDirectory + @"images\skills\facts\");
+                                    if (!File.Exists(AppDomain.CurrentDomain.BaseDirectory + @"images\skills\facts\" + fileName)) client.DownloadFileAsync(new Uri(skillRAW.traited_facts[i].icon), AppDomain.CurrentDomain.BaseDirectory + @"images\skills\facts\" + fileName);
                                 }
-                                newFact.Image = AppDomain.CurrentDomain.BaseDirectory + @"\images\skills\facts\" + fileName;
+                                newFact.Image = AppDomain.CurrentDomain.BaseDirectory + @"images\skills\facts\" + fileName;
                             }
                             newSkill.TraitedFacts.Add(newFact);
                         }
@@ -963,9 +1001,10 @@ namespace GW2Helper.Stuff
                     using (WebClient client = new WebClient())
                     {
                         fileName = skillRAW.icon.Substring(skillRAW.icon.LastIndexOf("/") + 1);
-                        if (!File.Exists(AppDomain.CurrentDomain.BaseDirectory + @"\images\skills\" + fileName)) client.DownloadFileAsync(new Uri(skillRAW.icon), AppDomain.CurrentDomain.BaseDirectory + @"\images\skills\" + fileName);
+                        Directory.CreateDirectory(AppDomain.CurrentDomain.BaseDirectory + @"images\skills\");
+                        if (!File.Exists(AppDomain.CurrentDomain.BaseDirectory + @"images\skills\" + fileName)) client.DownloadFileAsync(new Uri(skillRAW.icon), AppDomain.CurrentDomain.BaseDirectory + @"images\skills\" + fileName);
                     }
-                    newSkill.Image = AppDomain.CurrentDomain.BaseDirectory + @"\images\skills\" + fileName;
+                    newSkill.Image = AppDomain.CurrentDomain.BaseDirectory + @"images\skills\" + fileName;
                 }
 
                 if (skillRAW.transform_skills != null)

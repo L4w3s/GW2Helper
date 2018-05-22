@@ -99,9 +99,10 @@ namespace GW2Helper.Stuff
                     using (WebClient client = new WebClient())
                     {
                         fileName = guildUpgradeRAW.icon.Substring(guildUpgradeRAW.icon.LastIndexOf("/") + 1);
-                        if (!File.Exists(AppDomain.CurrentDomain.BaseDirectory + @"\images\guild\upgrades\" + fileName)) client.DownloadFileAsync(new Uri(guildUpgradeRAW.icon), AppDomain.CurrentDomain.BaseDirectory + @"\images\guild\upgrades\" + fileName);
+                        Directory.CreateDirectory(AppDomain.CurrentDomain.BaseDirectory + @"images\guild\upgrades\");
+                        if (!File.Exists(AppDomain.CurrentDomain.BaseDirectory + @"images\guild\upgrades\" + fileName)) client.DownloadFileAsync(new Uri(guildUpgradeRAW.icon), AppDomain.CurrentDomain.BaseDirectory + @"images\guild\upgrades\" + fileName);
                     }
-                    newUpgrade.Image = AppDomain.CurrentDomain.BaseDirectory + @"\images\guild\upgrades\" + fileName;
+                    newUpgrade.Image = AppDomain.CurrentDomain.BaseDirectory + @"images\guild\upgrades\" + fileName;
                 }
 
                 main.GuildUpgrades.Add(newUpgrade);
